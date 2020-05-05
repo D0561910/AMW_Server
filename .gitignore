@@ -2,5 +2,4 @@ node_modules/
 server/config/firebase.config.js
 server/config/serviceAccountKey.json
 package-lock.json
-*.json
 dist-server
