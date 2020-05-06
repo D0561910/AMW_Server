@@ -6,7 +6,7 @@ import APPError from "./utils/AppError";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
-// import loginRouter from "./routes/login";
+import loginRouter from "./routes/login";
 // import projectRouter from "./routes/project";
 
 var app = express();
@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-// app.use("/api", loginRouter);
+app.use("/api", loginRouter);
 // app.use("/api", projectRouter);
 
 // Route to be tested

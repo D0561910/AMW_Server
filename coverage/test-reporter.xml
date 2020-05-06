@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testExecutions version="1">
-    <file path="/Users/sinpuifang/Documents/SQA/workspace/AMW_Server/server/__tests__/sample.test.js">
-        <testCase name="Get Endpoints Get" duration="22"/>
-        <testCase name="Get Endpoints Get" duration="3"/>
-        <testCase name="Get Endpoints Get" duration="3"/>
-    </file>
-</testExecutions>
