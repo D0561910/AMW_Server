@@ -1,0 +1,146 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for server/config/firebase.config.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">server/config</a> firebase.config.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>2/2</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import * as admin from "firebase-admin";
+&nbsp;
+const serviceAccount = {
+  "type": "service_account",
+  "project_id": "sqa-project-b2222",
+  "private_key_id": "2c969ed45cf9ca8beafa5365d6d9ac7bbcac6557",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC9ySHc8eTQV6/I\n6B4toGlnlkPMu5x9MO7UX8qGsUlFUZhrybBzwU3njBVflTl5X/6IkrXvpxRrrFMX\nvV9piscMqeqxhDdDbT4yDKyyVpLfZ1sIXeY7SuXHu7URqzR93mEI2z7btzCnNqdo\nZy0rhIWLSNCrDhB/dFuIHhzs3wgtF7rsV5dRf5jeR2kiSEBD++3jd5rnPKLXr93Q\nLlAO0ZXaPqaVjERpyqdk3NPMKtKwYux9rCbFI+MYAX6qwthhh7+ThnbN/oMI7+so\nqLWuv+Ar6n4EuKh0NzKkNNL9jl+mIxjpvJNfrMdImJMKd99MYCI5mYLgYQ8wOCuE\nfXQoojnzAgMBAAECggEAHHTEdY71eoGzU0HuiHPVahk/SDrXL3Q/Uyubv89kR5cA\n7iR7JxgUWMQJzl+fEwJgNVUeH3VjW/OmL9iOrlIHH3B4xq4m5R7DpRh+am0Nr56d\nKSd/JmPICUctUp1jjP3jecL57VLN4jyRJFfYD37a0TQVSZidw6aMNOAjASc94Bi9\nDEA6b2E4pFVdWXLW+XsuOmOuTkxijX8g/Ij0hrT35CvMkIvoZ0zvWWfjdI1G7DhS\niwy++ELlb454HV2WUms+SCIsB60FlxSTTmAngThBCRaQXh1KZSTZmLZtoCjVGdxX\nOArvj2bMq9PH23S484T1LEjGa/1ZJEAl9z8TNPqDvQKBgQDq1OBfQsLa44LItKi6\n80T1LrsDFRsY9H7/A5ji526ESLZjaMssRr84SwuybSrAGKKTJLiu6GWQVlaCY083\nNpicvLehpbeO07+uncOw+EhocoJr30zZoVd1IFHllWihLkGkuEbudGEbbEaNUm7h\nq7iKbs/1U4uLZIOjjNgkOYly9wKBgQDO5L+Pf5B+Aef5dz6R+zHrIY7rNr0mrz0M\n0NTp3E4ldJ9j88d9yVAQZ+16gnN1JcfOWa+dgdn8QIfWPAXKGGImhAC7IqYJbKlu\n8QGnFcwXSKn1IfO75g4N8vi2B/BAodAZ5mZSrVxREOuvbbGTXkAfVZtU0KPvN/Tt\nEJ2TdZj15QKBgQCZHQHKuvHn3I3KpZiahMGCh9yhzuIjLE+doM/PqoxxriNVv98x\nWFOXtb7DsNA9/hIKlNfiG18VdGXlkDD3VB6/m4Cz4iRD+SazCOSuf8RebcNB6I/o\nGn22vcMISZm19j4Q06JUGgey5K8/t+7aL6gcgtIPKFEFKx11xwCq5eUL0wKBgQCl\n0Bbmvuni00xDVxpCjPuY4rBUOu6ljlRzbPr24qWOx0TnKn17hlgwjdp6EQrPnJPi\nAWcJ6QP3cxBq1ngdXCVtkOW1FTPU4c15KJaWfpWvI4FzAN8CfIJPE6fY28vlQMoz\nt7/SCzatkc4SLuvem+7wLf/rnbuFAWe+h06C3ADXMQKBgBtgIBaz5ZZI1jvrtCmj\n022A0RQiT5LyWJvgevi9HpLdAJm9++LlowQASbXaxywzo7//vr5kjWeCv3CLM9t0\np5h/IMNDETGlxsgin3TmvExk0hbP/UVJHZ6wGspZt0G+a7EMAi/4Iko/li+Y0O8Y\nB0RjvWzG2Xyzcdd5FnmWk5cb\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-qy4os@sqa-project-b2222.iam.gserviceaccount.com",
+  "client_id": "115376012843567032063",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qy4os%40sqa-project-b2222.iam.gserviceaccount.com"
+}
+&nbsp;
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://sqa-project-b2222.firebaseio.com",
+  storageBucket: 'sqa-project-b2222.appspot.com',
+});
+&nbsp;
+export default admin
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
+                at Wed May 06 2020 10:41:46 GMT+0800 (Taipei Standard Time)
+            </div>
+        </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    
