@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import bcrypt from "bcrypt";
 import APPError from "./utils/AppError";
 
 import indexRouter from "./routes/index";
@@ -26,6 +27,24 @@ app.use("/api", loginRouter);
 app.get("/", (req, res) => {
   return res.status(200).json({ nome: "Handsome Charles Sin" });
 });
+
+const saltRounds = 10;
+const myPlaintextPassword = "admin";
+const someOtherPlaintextPassword = "not_bacon";
+
+// bcrypt.genSalt(saltRounds, function (err, salt) {
+//   console.log({ salt });
+//   bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
+//     // Store hash in your password DB.
+//     console.log({ hash });
+//   });
+// });
+
+// for register new account
+// bcrypt.hash(myPlaintextPassword, saltRounds).then(function (hash) {
+//   // Store hash in your password DB.
+//   console.log(`admin ${hash}`);
+// });
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {

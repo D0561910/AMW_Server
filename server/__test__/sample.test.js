@@ -34,11 +34,11 @@ describe("Get Endpoints", () => {
 });
 
 // @Test '/login' route with true username and password;
-describe("Post login api", () => {
+describe("Post login api with true parameter", () => {
   it("Post", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ name: "test", password: "123456" });
+      .send({ name: "test@gmail.com", password: "123456" });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("token");
     done();
@@ -46,11 +46,11 @@ describe("Post login api", () => {
 });
 
 // @Test '/login' route with wrong username and password;
-describe("Post login api", () => {
-  it("Post", async (done) => {
+describe("Post login api with error", () => {
+  test("Post", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ name: "tester", password: "6543211" });
+      .send({ name: "tester@gmail.com", password: "6543211" });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();

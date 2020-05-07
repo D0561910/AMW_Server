@@ -5,15 +5,13 @@ import findUser from "../utils/findUser";
 const router = express.Router();
 
 router.post("/login", async (req, res, next) => {
-  var users = await findUser(req.body.name, req.body.password)
+  const users = await findUser(req.body.name, req.body.password)
     .then(() => {
       return true;
     })
     .catch(() => {
       return false;
     });
-
-  //   var users = await findUser(req.body.name, req.body.password);
 
   if (users) {
     jwt.sign({ users }, "secretkey", { expiresIn: "60m" }, (err, token) => {
