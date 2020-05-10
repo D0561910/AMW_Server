@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const schemas = {
     loginSchema: Joi.object().keys({
@@ -7,9 +7,9 @@ const schemas = {
     }),
     signUpSchema: Joi.object().keys({
         email: Joi.string().email().required(),
-        name: Joi.string().min(2).max(20).required(),
+        username: Joi.string().min(2).max(20).required(),
         password: Joi.string().regex(/^[\w]{8,30}$/)
     })
 };
 
-module.exports = schemas;
+export default schemas;
