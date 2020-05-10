@@ -26,10 +26,6 @@ function findUser(name, password) {
           if (child[i].name === name) {
             userMatch(child[i]);
           }
-          console.log(`${i}: ${child[i].id}`);
-          console.log(`${i}: ${child[i].name}`);
-          console.log(`${i}: ${child[i].email}`);
-          console.log(`${i}: ${child[i].password}`);
         }
       });
   });
