@@ -1,12 +1,13 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import admin from "firebase-admin";
+import validation from "../utils/validation";
+import schemas from "../utils/schemas";
 
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
-    // const vaild = emailVaild(req.body.email);
-
+router.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
+    
     const saltRounds = 10;
     // for register new account
     bcrypt.hash(req.body.password, saltRounds).then(function (hash) {

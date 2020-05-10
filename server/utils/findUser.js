@@ -2,7 +2,7 @@ import "regenerator-runtime/runtime";
 import bcrypt from "bcrypt";
 import admin from "../config/firebase.config";
 
-function findUser(name, password) {
+function findUser(email, password) {
   return new Promise((resolve, reject) => {
     admin
       .database()
@@ -13,7 +13,7 @@ function findUser(name, password) {
         function userMatch(userItem) {
           bcrypt.compare(password, userItem.password).then((result) => {
             if (result) {
-              if (userItem.name === name) {
+              if (userItem.email === email) {
                 return resolve();
               } else {
                 return reject();
@@ -24,11 +24,12 @@ function findUser(name, password) {
 
         var child = snap.val()
         for (let i in child) {
-          if (child[i].name === name) {
+          if (child[i].email === email) {
             notfound = false;
             userMatch(child[i]);
           }
         }
+        
         // this statement is for check found user or not.
         if (notfound) {
           return reject();

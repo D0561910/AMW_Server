@@ -38,7 +38,7 @@ describe("Post login api with true parameter", () => {
   it("Post", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ name: "test@gmail.com", password: "123456" });
+      .send({ email: "test@gmail.com", password: "123456" });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("token");
     done();
@@ -50,7 +50,7 @@ describe("Post login api with error", () => {
   test("Post", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ name: "tester@gmail.com", password: "6543211" });
+      .send({ email: "tester@gmail.com", password: "6543211" });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();
