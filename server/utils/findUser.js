@@ -9,6 +9,7 @@ function findUser(name, password) {
       .ref("users/")
       .once("value")
       .then((snap) => {
+        var notfound = true
         function userMatch(userItem) {
           bcrypt.compare(password, userItem.password).then((result) => {
             if (result) {
@@ -24,8 +25,12 @@ function findUser(name, password) {
         var child = snap.val()
         for (let i in child) {
           if (child[i].name === name) {
+            notfound = false;
             userMatch(child[i]);
           }
+        }
+        if (notfound) {
+          return reject();
         }
       });
   });
