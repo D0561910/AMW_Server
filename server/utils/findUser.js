@@ -11,44 +11,28 @@ function findUser(name, password) {
       .then((snap) => {
         function userMatch(userItem) {
           bcrypt.compare(password, userItem.password).then((result) => {
-            if (result && userItem.name === name) {
-              return resolve();
-            } else {
-              return reject();
+            if (result) {
+              if (userItem.name === name) {
+                return resolve();
+              } else {
+                return reject();
+              }
             }
           });
         }
-        snap.forEach(async function (childSnapshot) {
-          var childObject = await childSnapshot.val();
-          userMatch(childObject);
-        });
+
+        var child = snap.val()
+        for (let i in child) {
+          if (child[i].name === name) {
+            userMatch(child[i]);
+          }
+          console.log(`${i}: ${child[i].id}`);
+          console.log(`${i}: ${child[i].name}`);
+          console.log(`${i}: ${child[i].email}`);
+          console.log(`${i}: ${child[i].password}`);
+        }
       });
   });
 }
 
 export default findUser;
-
-// const userPromise = new Promise((resolve, reject) => {
-//     admin
-//       .database()
-//       .ref("users/")
-//       .once("value")
-//       .then((snap) => {
-//         snap.forEach((childSnapshot) => {
-//           var childObject = childSnapshot.val();
-//           var vaild = childObject.name === name;
-//           // console.log(vaild);
-//           if (vaild) {
-//             bcrypt.compare(password, childObject.password).then((result) => {
-//               if (result) {
-//                 resolve("done");
-//               } else {
-//                 reject(new APPError.LoginError1());
-//               }
-//             });
-//           }
-//           reject("error");
-//         });
-
-//       });
-//   });
