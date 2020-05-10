@@ -1,11 +1,13 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import findUser from "../utils/findUser";
+import validation from "../utils/validation";
+import schemas from "../utils/schemas";
 
 const router = express.Router();
 
-router.post("/login", async (req, res, next) => {
-  const users = await findUser(req.body.name, req.body.password)
+router.post("/login", validation(schemas.loginSchema), async (req, res) => {
+  const users = await findUser(req.body.email, req.body.password)
     .then(() => {
       return true;
     })
