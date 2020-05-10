@@ -29,6 +29,7 @@ function findUser(name, password) {
             userMatch(child[i]);
           }
         }
+        // this statement is for check found user or not.
         if (notfound) {
           return reject();
         }
