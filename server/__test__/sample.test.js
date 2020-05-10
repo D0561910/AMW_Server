@@ -1,6 +1,7 @@
 import request from "supertest";
 import "regenerator-runtime/runtime";
-import server from "../bin/www";
+// import server from "../bin/www";
+import server from "../app";
 import admin from "../config/firebase.config";
 
 // @Test '/' route
@@ -68,6 +69,6 @@ describe("Get Endpoints", () => {
 
 afterAll(async (done) => {
   // close server conection
-  server.close();
+  // server.close();
   done();
 });
