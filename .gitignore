@@ -4,3 +4,4 @@ server/config/serviceAccountKey.json
 package-lock.json
 dist-server
 coverage
+.scannerwork
