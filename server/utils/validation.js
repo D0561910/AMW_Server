@@ -1,13 +1,9 @@
-import Joi from "joi";
-
-const validation = (schema, property) => {
-    return (req, res, next) => {
-        const { error } = Joi.validate(req.body, schema);
-        const valid = error == null;
-
-        if (valid) {
+const validation = (schema) => {
+    return async (req, res, next) => {
+        try {
+            const vaild = await schema.validateAsync(req.body);
             next();
-        } else {
+        } catch (error) {
             const {
                 details
             } = error;
@@ -19,4 +15,5 @@ const validation = (schema, property) => {
         }
     };
 };
+
 export default validation;
