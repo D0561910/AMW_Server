@@ -14,7 +14,6 @@ router.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
         // Store hash in your password DB.
         admin.database().ref("users/").push({
             email: req.body.email,
-            id: Math.ceil(Math.random() * 9999999),
             name: req.body.name,
             password: hash
         });
