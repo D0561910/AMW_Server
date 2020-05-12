@@ -48,12 +48,60 @@ describe("Post login api with true parameter", () => {
 
 // @Test '/login' route with wrong username and password;
 describe("Post login api with error", () => {
-  test("Post", async (done) => {
+  it("Post", async (done) => {
     const res = await request(server)
       .post("/api/login")
       .send({ email: "tester@gmail.com", password: "6543211" });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/login' route with empty body;
+describe("Post login api with error", () => {
+  it("Post", async (done) => {
+    const res = await request(server)
+      .post("/api/login")
+      .send({});
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
+// @Test '/signup' route with error username and password;
+describe("Post login api with error", () => {
+  it("Post", async (done) => {
+    const res = await request(server)
+      .post("/api/signup")
+      .send({ email: "tester@", password: "12345", names: "Test" });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
+// @Test '/signup' route with true username and password;
+describe("Post login api with error", () => {
+  it("Post", async (done) => {
+    const res = await request(server)
+      .post("/api/signup")
+      .send({ email: "Ronald@gmail.com", password: "123456aaccd", name: "Donald Duch" });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("ret_msg");
+    done();
+  });
+});
+
+// @Test '/signup' route with empty body;
+describe("Post login api with error", () => {
+  it("Post", async (done) => {
+    const res = await request(server)
+      .post("/api/signup")
+      .send({});
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
     done();
   });
 });
