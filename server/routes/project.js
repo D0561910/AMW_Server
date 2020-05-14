@@ -2,6 +2,7 @@ import express from "express";
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import admin from "../config/firebase.config";
+import dataInfo from "../utils/classes/info.module.js";
 
 const router = express.Router();
 
@@ -31,14 +32,15 @@ router.post("/event/create", (req, res) => {
     eventLocation: "",
     eventName: "",
     startDate: "",
+    event_deatils: "",
     creator: decoded.email,
   });
 
   res.status(201).json({ msg: "Event Created" });
 });
 
-// API: Getting project view for management page
-router.post("/projets", function (req, res) {
+// API: Getting project view for management page.
+router.post("/projets", (req, res) => {
   const user = jwt.verify(req.body.token, "secretkey");
   // user.email //user email address as ID
 
@@ -61,131 +63,34 @@ router.post("/projets", function (req, res) {
     });
 });
 
-// router.get("/dashs", async function (req, res, next) {
-//     // set project id and project name in session.
-//     req.session.prjId = req.query._csrf;
-//     req.session.prj = req.query.project;
+// API: Getting select project overview details.
+router.post("/project/overview", async (req, res, next) => {
+  const user = jwt.verify(req.body.token, "secretkey");
 
-//     var sess = req.session;
-//     var loginUser = sess.loginUser;
-//     var userEmail = sess.userEmail;
-//     var isLogined = !!loginUser;
-//     var userid = sess.uid;
+  var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
+  const reletrip = await releaseREF.once("value").then((snap) => snap.val());
 
-//     var db = firebase.database();
-//     var releaseREF = db.ref(`/event/${req.query._csrf}/release`);
-//     var infoRef = db.ref(`/event/${req.query._csrf}/information`);
-//     const reletrip = await releaseREF.once("value").then((snap) => snap.val());
-
-//     const promiseGetInfo = new Promise((resolve, reject) => {
-//         var data = new dataInfo();
-//         infoRef.on("value", function (snapshot) {
-//             var info = snapshot.val();
-//             if (info === null) {
-//                 return;
-//             } else {
-//                 data.endDate = info.endDate;
-//                 data.eventAuthor = info.eventAuthor;
-//                 data.eventLocation = info.eventLocation;
-//                 data.eventName = info.eventName;
-//                 data.startDate = info.startDate;
-//                 data.event_deatils = info.event_deatils;
-//                 data.release = reletrip;
-//             }
-//             if (userid === info.userId) {
-//                 resolve(data);
-//             } else {
-//                 reject("Error User Id");
-//             }
-//         });
-//     });
-
-//     promiseGetInfo
-//         .then((response) => {
-//             res.render("main", {
-//                 isLogined: isLogined,
-//                 prjname: req.query.project,
-//                 prjId: req.query._csrf,
-//                 uid: sess.uid || "",
-//                 name: loginUser || "",
-//                 email: userEmail || "",
-//                 data: response,
-//             });
-//         })
-//         .catch((error) => {
-//             res.render("main", {
-//                 isLogined: false,
-//             });
-//         });
-// });
-
-// router.get("/dashss", async function (req, res, next) {
-//     class dataInfo {
-//         constructor() {
-//             this.endDate = " ";
-//             this.eventAuthor = " ";
-//             this.eventLocation = " ";
-//             this.eventName = " ";
-//             this.startDate = " ";
-//             this.event_deatils = " ";
-//             this.release = " ";
-//         }
-//     }
-
-//     var sess = req.session;
-//     var loginUser = sess.loginUser;
-//     var userEmail = sess.userEmail;
-//     var prjId = sess.prjId;
-//     var projectName = sess.prj;
-//     var isLogined = !!loginUser;
-//     var userid = sess.uid;
-
-//     var db = firebase.database();
-//     var releaseREF = db.ref(`/event/${prjId}/release`);
-//     var infoRef = db.ref(`/event/${prjId}/information`);
-//     const reletrip = await releaseREF.once("value").then((snap) => snap.val());
-
-//     const promiseGetInfo = new Promise((resolve, reject) => {
-//         var data = new dataInfo();
-//         infoRef.on("value", function (snapshot) {
-//             var info = snapshot.val();
-//             if (info === null) {
-//                 return;
-//             } else {
-//                 data.endDate = info.endDate;
-//                 data.eventAuthor = info.eventAuthor;
-//                 data.eventLocation = info.eventLocation;
-//                 data.eventName = info.eventName;
-//                 data.startDate = info.startDate;
-//                 data.event_deatils = info.event_deatils;
-//                 data.release = reletrip;
-//             }
-//             if (userid === info.userId) {
-//                 resolve(data);
-//             } else {
-//                 reject("Error User Id");
-//             }
-//         });
-//     });
-
-//     promiseGetInfo
-//         .then((response) => {
-//             res.render("main", {
-//                 isLogined: isLogined,
-//                 prjname: projectName,
-//                 prjId: prjId,
-//                 uid: sess.uid || "",
-//                 name: loginUser || "",
-//                 email: userEmail || "",
-//                 data: response,
-//             });
-//         })
-//         .catch((error) => {
-//             res.render("main", {
-//                 isLogined: false,
-//             });
-//         });
-// });
+  admin
+    .database()
+    .ref(`/event/${req.body.projectid}/information`)
+    .once("value")
+    .then((snap) => {
+      const child = snap.val();
+      var data = new dataInfo();
+      if (child.creator === user.email) {
+        data.endDate = child.endDate;
+        data.eventAuthor = child.eventAuthor;
+        data.eventLocation = child.eventLocation;
+        data.eventName = child.eventName;
+        data.startDate = child.startDate;
+        data.event_deatils = child.event_deatils;
+        data.release = reletrip;
+        res.status(201).json({ data });
+      } else {
+        res.status(400).json({ errmsg: "User ID not match" });
+      }
+    });
+});
 
 // router.post("/getstatus", async function (req, res, next) {
 //     // Get project id.
