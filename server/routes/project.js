@@ -1,110 +1,65 @@
-import express from 'express';
-import moment from 'moment';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import moment from "moment";
+import jwt from "jsonwebtoken";
 import admin from "../config/firebase.config";
 
 const router = express.Router();
 
 // API: User add new project
 router.post("/event/create", (req, res) => {
-    var projectName = req.body.project;
-    var projectID = `${projectName.split(/\s+/).join('')}-${moment.now()}`;
-    var decoded = jwt.verify(req.body.token, 'secretkey');
+  var projectName = req.body.project;
+  var projectID = `${projectName.split(/\s+/).join("")}-${moment.now()}`;
+  var decoded = jwt.verify(req.body.token, "secretkey");
 
-    var projectRef = admin.database().ref(`/projects`);
-    var eventRef = admin.database().ref(`/event/${projectID}/information`);
-    var releaseRef = admin.database().ref(`/event/${projectID}/`);
+  var projectRef = admin.database().ref(`/projects`);
+  var eventRef = admin.database().ref(`/event/${projectID}/information`);
+  var releaseRef = admin.database().ref(`/event/${projectID}/`);
 
-    projectRef.push({
-        projectId: projectID,
-        projectName,
-        creator: decoded.email,
-    });
+  projectRef.push({
+    projectId: projectID,
+    projectName,
+    creator: decoded.email,
+  });
 
-    releaseRef.update({
-        release: false,
-    });
+  releaseRef.update({
+    release: false,
+  });
 
-    eventRef.set({
-        endDate: "",
-        eventAuthor: "",
-        eventLocation: "",
-        eventName: "",
-        startDate: "",
-        creator: decoded.email,
-    });
+  eventRef.set({
+    endDate: "",
+    eventAuthor: "",
+    eventLocation: "",
+    eventName: "",
+    startDate: "",
+    creator: decoded.email,
+  });
 
-    res.status(201).json({ msg: "Event Created" });
+  res.status(201).json({ msg: "Event Created" });
 });
 
 // API: Getting project view for management page
-// router.post("/projectdetails", function (req, res) {
-//     var id = req.body.uid;
-//     var db = firebase.database();
-//     var getRef = db.ref("/project");
+router.post("/projets", function (req, res) {
+  const user = jwt.verify(req.body.token, "secretkey");
+  // user.email //user email address as ID
 
-//     const promiseGetProject = new Promise((resolve, reject) => {
-//         getRef.on("value", function (snapshot) {
-//             var fbase = snapshot.val();
-//             var projectitem = "";
-
-//             for (let i in fbase) {
-//                 var e = fbase[i].userId;
-//                 if (e === id) {
-//                     projectitem += '<div class="col-xl-4 col-lg-6 col-md-12">';
-//                     projectitem += '<div class="card">';
-//                     projectitem += '<div class="card-header">';
-//                     projectitem += '<h1 class="card-title">';
-//                     projectitem += fbase[i].projectName;
-//                     projectitem += "</h1>";
-//                     projectitem += '<div class="heading-elements">';
-//                     projectitem += '<ul class="list-inline d-block mb-0">';
-//                     projectitem += "<li>";
-//                     projectitem += '<form action="/dashs" method="GET">';
-//                     projectitem += '<input type="hidden" name="_csrf" ';
-//                     projectitem += 'value="' + fbase[i].projectId + '">';
-//                     projectitem += '<input type="hidden" name="project" ';
-//                     projectitem += 'value="' + fbase[i].projectName + ' ">';
-//                     projectitem +=
-//                         '<button type="submit" class="btn btn-sm btn-warning box-shadow-3 round btn-min-width pull-right">編輯</button>';
-//                     projectitem += "</form>";
-//                     projectitem += "</li>";
-//                     projectitem += "</ul>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                     projectitem += '<div class="card-content collapse show">';
-//                     projectitem += '<div class="card-body">';
-//                     projectitem += '<div class="media d-flex">';
-//                     projectitem +=
-//                         '<div class="media-body text-left align-self-bottom mt-3">';
-//                     projectitem +=
-//                         '<span class="d-block mb-1 font-medium-1">專案序號 : </span>';
-//                     projectitem += '<h4 class="warning mb-0">';
-//                     projectitem += fbase[i].projectId;
-//                     projectitem += "</h4>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                     projectitem += "</div>";
-//                 }
-//             }
-//             if (projectitem !== "") {
-//                 resolve(projectitem);
-//             } else {
-//                 reject("Empty");
-//             }
-//         });
-//     });
-//     promiseGetProject
-//         .then((response) => {
-//             res.send(response);
-//         })
-//         .catch((error) => {
-//             res.send("Empty data");
-//         });
-// });
+  admin
+    .database()
+    .ref(`/projects/`)
+    .once("value")
+    .then((snap) => {
+      var child = snap.val();
+      var projects = [];
+      for (let i in child) {
+        if (child[i].creator === user.email) {
+          projects.push({
+            projectId: child[i].projectId,
+            projectName: child[i].projectName,
+          });
+        }
+      }
+      res.status(201).json({ data: projects });
+    });
+});
 
 // router.get("/dashs", async function (req, res, next) {
 //     // set project id and project name in session.
