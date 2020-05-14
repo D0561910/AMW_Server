@@ -3,30 +3,13 @@ import bcrypt from "bcrypt";
 import admin from "firebase-admin";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
+import checkEmailValidation from "../utils/checkEmailValidation"
 
 const router = express.Router();
 
-function checkUser(email) {
-    return new Promise((resolve) => {
-        admin
-            .database()
-            .ref("/users/")
-            .once("value")
-            .then((snap) => {
-                var child = snap.val()
-                for (let i in child) {
-                    if (child[i].email == email) {
-                        return resolve("true");
-                    }
-                }
-                return resolve("false");
-            });
-    });
-}
-
 router.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
 
-    const reply = await checkUser(req.body.email);
+    const reply = await checkEmailValidation(req.body.email);
 
     const saltRounds = 10;
     // for register new account
