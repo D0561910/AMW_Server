@@ -16,7 +16,7 @@ router.post("/login", validation(schemas.loginSchema), async (req, res) => {
     });
 
   if (users) {
-    jwt.sign({ users }, "secretkey", { expiresIn: "60m" }, (err, token) => {
+    jwt.sign({ users, email: req.body.email }, "secretkey", { expiresIn: "60m" }, (err, token) => {
       res.status(200).json({
         msg: "Login Successfully",
         token,

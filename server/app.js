@@ -1,15 +1,13 @@
 import express from "express";
-import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import bcrypt from "bcrypt";
 import APPError from "./utils/AppError";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import loginRouter from "./routes/login";
 import signUpRouter from "./routes/signup";
-// import projectRouter from "./routes/project";
+import projectRouter from "./routes/project";
 
 var app = express();
 
@@ -17,13 +15,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, "../public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
-// app.use("/api", projectRouter);
+app.use("/api", projectRouter);
 
 // Route to be tested
 app.get("/", (req, res) => {
