@@ -1,24 +1,24 @@
 import express from 'express';
+import moment from 'moment';
+import jwt from 'jsonwebtoken';
 import admin from "../config/firebase.config";
 
 const router = express.Router();
 
 // API: User add new project
-router.post("/addproject", function (req, res) {
-    var projid = req.body.project;
-    projid = projid.replace(" ", "");
-    projid = `${projid}-${moment.now()}`;
+router.post("/event/create", (req, res) => {
+    var projectName = req.body.project;
+    var projectID = `${projectName.split(/\s+/).join('')}-${moment.now()}`;
+    var decoded = jwt.verify(req.body.token, 'secretkey');
 
-    var db = firebase.database();
-    var ref = db.ref("/");
-    var projectRef = ref.child("/project");
-    var eventRef = ref.child(`/event/${projid}/information`);
-    var releaseRef = ref.child(`/event/${projid}/`);
+    var projectRef = admin.database().ref(`/projects`);
+    var eventRef = admin.database().ref(`/event/${projectID}/information`);
+    var releaseRef = admin.database().ref(`/event/${projectID}/`);
 
     projectRef.push({
-        projectId: projid,
-        projectName: req.body.project,
-        userId: req.body.userid,
+        projectId: projectID,
+        projectName,
+        creator: decoded.email,
     });
 
     releaseRef.update({
@@ -26,15 +26,15 @@ router.post("/addproject", function (req, res) {
     });
 
     eventRef.set({
-        endDate: " ",
-        eventAuthor: " ",
-        eventLocation: " ",
-        eventName: " ",
-        startDate: " ",
-        userId: req.body.userid,
+        endDate: "",
+        eventAuthor: "",
+        eventLocation: "",
+        eventName: "",
+        startDate: "",
+        creator: decoded.email,
     });
 
-    res.send("Connected:");
+    res.status(201).json({ msg: "Event Created" });
 });
 
 // API: Getting project view for management page
