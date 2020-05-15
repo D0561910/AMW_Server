@@ -36,7 +36,9 @@ router.post("/event/create", (req, res) => {
     creator: decoded.email,
   });
 
-  res.status(201).json({ msg: "Event Created" });
+  res.status(201).json({
+    msg: "Event Created"
+  });
 });
 
 // API: Getting project view for management page.
@@ -59,12 +61,14 @@ router.post("/projets", (req, res) => {
           });
         }
       }
-      res.status(201).json({ data: projects });
+      res.status(201).json({
+        data: projects
+      });
     });
 });
 
 // API: Getting select project overview details.
-router.post("/project/overview", async (req, res, next) => {
+router.post("/project/overview", async (req, res) => {
   const user = jwt.verify(req.body.token, "secretkey");
 
   var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
@@ -85,92 +89,25 @@ router.post("/project/overview", async (req, res, next) => {
         data.startDate = child.startDate;
         data.event_deatils = child.event_deatils;
         data.release = reletrip;
-        res.status(201).json({ data });
+        res.status(201).json({
+          data
+        });
       } else {
-        res.status(400).json({ errmsg: "User ID not match" });
+        res.status(400).json({
+          errmsg: "User ID not match"
+        });
       }
     });
 });
 
-// router.post("/getstatus", async function (req, res, next) {
-//     // Get project id.
-//     var db = firebase.database();
-
-//     var checkInfo = db.ref(`event/${req.session.prjId}`);
-
-//     const trip2 = await checkInfo
-//         .child(`/transportImages`)
-//         .once("value")
-//         .then((snap) => snap.val());
-//     // const trip3 = await checkInfo.child(`/sponor`).once('value').then(snap => snap.val());
-//     const trip = await checkInfo
-//         .child(`/information`)
-//         .once("value")
-//         .then((snap) => {
-//             var chkInfo = snap.val();
-//             var iStatus = "";
-//             let end = chkInfo.endDate != "";
-//             let author = chkInfo.eventAuthor != "";
-//             let loc = chkInfo.eventLocation != "";
-//             let logo = chkInfo.eventLogo != null;
-//             let name = chkInfo.eventName != "";
-//             let start = chkInfo.startDate != "";
-//             if (end && author && loc && logo && name && start) {
-//                 iStatus = "notempty";
-//             }
-//             return iStatus;
-//         });
-//     const trip4 = await checkInfo
-//         .child(`/schedules`)
-//         .once("value")
-//         .then((snap) => {
-//             var event = snap.val();
-//             var eStatus = "notEmpty";
-//             for (let i in event) {
-//                 var keyValue = event[i];
-//                 for (let j in keyValue) {
-//                     if (j !== "empty") {
-//                         if (keyValue[j].empty) {
-//                             eStatus = "empty";
-//                         }
-//                     }
-//                 }
-//             }
-//             return eStatus;
-//         });
-//     var transStatus = trip2 != null;
-//     var infoStatus = trip != "";
-//     var eventStatus = trip4 != "empty";
-
-//     let obj = {
-//         infoStatus,
-//         transStatus,
-//         eventStatus,
-//     };
-
-//     res.send(obj);
-// });
-
-// // Get Number Of Member API
-// router.post("/getmember", function (req, res, next) {
-//     // Get project id.
-//     var db = firebase.database();
-
-//     var memberRef = db.ref(`/event/${req.session.prjId}/UserList`);
-
-//     const memberNo = new Promise((resolve) => {
-//         var noOfMember;
-//         memberRef.on("value", async function (snapshot) {
-//             var mem = await snapshot.numChildren();
-//             noOfMember = mem;
-//             resolve(noOfMember);
-//         });
-//     });
-
-//     memberNo.then((response) => {
-//         res.send(`${response}`);
-//     });
-// });
+// Get Number Of Member API
+router.post("/totalUserAccess", function (req, res) {
+  admin.database().ref(`/event/${req.body.projectid}/UserList`).once("value").then((snap) => {
+    res.status(201).json({
+      data: snap.numChildren(),
+    });
+  });
+});
 
 // router.post("/updatedetails", async function (req, res, next) {
 //     var sess = req.session;
@@ -404,7 +341,6 @@ router.post("/project/overview", async (req, res, next) => {
 //     var prjid = req.body.projectid;
 //     prjname = prjname.trim();
 //     prjid = prjid.trim();
-
 //     var sess = req.session;
 //     var loginUser = sess.loginUser;
 //     var userEmail = sess.userEmail;
@@ -412,15 +348,12 @@ router.post("/project/overview", async (req, res, next) => {
 //     var projectName = sess.prj;
 //     var isLogined = !!loginUser;
 //     var userid = sess.uid;
-
 //     if (prjid !== prjId && prjname !== projectName) {
 //         res.redirect("/logout");
 //     }
-
 //     var db = firebase.database();
 //     var rmEventRef = db.ref(`/event/${prjid}`);
 //     var projectRef = db.ref(`/project`);
-
 //     const promiseRemove = new Promise((resolve, reject) => {
 //         projectRef.on("value", function (snapshot) {
 //             var proj = snapshot.val();
@@ -436,13 +369,67 @@ router.post("/project/overview", async (req, res, next) => {
 //             resolve(key);
 //         });
 //     });
-
 //     promiseRemove.then((response) => {
 //         var rmProjectRef = projectRef.child(`/${response}`);
 //         rmEventRef.remove();
 //         rmProjectRef.remove();
 //         res.send("Remove Successful");
 //     });
+// });
+
+// router.post("/getstatus", async function (req, res, next) {
+//     // Get project id.
+//     var db = firebase.database();
+//     var checkInfo = db.ref(`event/${req.session.prjId}`);
+//     const trip2 = await checkInfo
+//         .child(`/transportImages`)
+//         .once("value")
+//         .then((snap) => snap.val());
+//     // const trip3 = await checkInfo.child(`/sponor`).once('value').then(snap => snap.val());
+//     const trip = await checkInfo
+//         .child(`/information`)
+//         .once("value")
+//         .then((snap) => {
+//             var chkInfo = snap.val();
+//             var iStatus = "";
+//             let end = chkInfo.endDate != "";
+//             let author = chkInfo.eventAuthor != "";
+//             let loc = chkInfo.eventLocation != "";
+//             let logo = chkInfo.eventLogo != null;
+//             let name = chkInfo.eventName != "";
+//             let start = chkInfo.startDate != "";
+//             if (end && author && loc && logo && name && start) {
+//                 iStatus = "notempty";
+//             }
+//             return iStatus;
+//         });
+//     const trip4 = await checkInfo
+//         .child(`/schedules`)
+//         .once("value")
+//         .then((snap) => {
+//             var event = snap.val();
+//             var eStatus = "notEmpty";
+//             for (let i in event) {
+//                 var keyValue = event[i];
+//                 for (let j in keyValue) {
+//                     if (j !== "empty") {
+//                         if (keyValue[j].empty) {
+//                             eStatus = "empty";
+//                         }
+//                     }
+//                 }
+//             }
+//             return eStatus;
+//         });
+//     var transStatus = trip2 != null;
+//     var infoStatus = trip != "";
+//     var eventStatus = trip4 != "empty";
+//     let obj = {
+//         infoStatus,
+//         transStatus,
+//         eventStatus,
+//     };
+//     res.send(obj);
 // });
 
 export default router;
