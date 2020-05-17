@@ -33,7 +33,7 @@ describe("Get /users", () => {
   });
 });
 
-// @Test '/login' route with true username and password;
+// @Test '/login' route with true email and password;
 describe("Post login api with true parameter", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server)
@@ -45,12 +45,24 @@ describe("Post login api with true parameter", () => {
   });
 });
 
-// @Test '/login' route with wrong username and password;
+// @Test '/login' route with wrong email and password;
 describe("Post login api with error", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server)
       .post("/api/login")
       .send({ email: "tester@gmail.com", password: "6543211" });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/login' route with true email, but wrong password;
+describe("Post login api with true email, but wrong password", () => {
+  it("Post /api/login", async (done) => {
+    const res = await request(server)
+      .post("/api/login")
+      .send({ email: "test@gmail.com", password: "123456aaccd" });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();

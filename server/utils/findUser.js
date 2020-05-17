@@ -9,27 +9,25 @@ function findUser(email, password) {
       .ref("users/")
       .once("value")
       .then((snap) => {
-        var notfound = true
+        var notfound = true;
         function userMatch(userItem) {
           bcrypt.compare(password, userItem.password).then((result) => {
             if (result) {
-              if (userItem.email === email) {
-                return resolve();
-              } else {
-                return reject();
-              }
+              return resolve();
+            } else {
+              return reject();
             }
           });
         }
 
-        var child = snap.val()
+        var child = snap.val();
         for (let i in child) {
-          if (child[i].email === email) {
+          if (child[i].email == email) {
             notfound = false;
             userMatch(child[i]);
           }
         }
-        
+
         // this statement is for check found user or not.
         if (notfound) {
           return reject();
