@@ -2,7 +2,6 @@ import request from "supertest";
 import "regenerator-runtime/runtime";
 // import server from "../bin/www";
 import server from "../app";
-import admin from "../config/firebase.config";
 
 // @Test '/' route
 describe("Get Endpoints", () => {
@@ -70,7 +69,7 @@ describe("Post login api with error", () => {
   });
 });
 
-// @Test '/signup' route with error username and password;
+// @Test '/signup' route with error type;
 describe("Post login api with error", () => {
   it("Post", async (done) => {
     const res = await request(server)
@@ -82,7 +81,7 @@ describe("Post login api with error", () => {
   });
 });
 
-// @Test '/signup' route with true username and password;
+// @Test '/signup' route with true email, username and password;
 describe("Post login api with error", () => {
   it("Post", async (done) => {
     const res = await request(server)
@@ -111,6 +110,24 @@ describe("Get Endpoints", () => {
   it("Get", async (done) => {
     const res = await request(server).get("/mains").send();
     expect(res.statusCode).toEqual(404);
+    done();
+  });
+});
+
+// @Test '/api/event/create' route with parameters;
+describe("Post Create New Project", () => {
+  it("Create New Event Project", async (done) => {
+    const loginResult = await request(server)
+      .post("/api/login")
+      .send({ email: "test@gmail.com", password: "123456" });
+    const res = await request(server)
+      .post("/api/event/create")
+      .send({
+        project: "Unit-Testing",
+        token: `${loginResult.body.token}`
+      });
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("msg");
     done();
   });
 });
