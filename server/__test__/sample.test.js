@@ -87,7 +87,21 @@ describe("Post login api with error", () => {
       password: "123456aaccd",
       name: "Donald Duch",
     });
-    expect(res.statusCode).toEqual(200);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("ret_msg");
+    done();
+  });
+});
+
+// @Test '/signup' route with same email, username and password;
+describe("Post login api with error", () => {
+  it("Post /api/signup", async (done) => {
+    const res = await request(server).post("/api/signup").send({
+      email: "Ronald@gmail.com",
+      password: "123456aaccd",
+      name: "Donald Duch",
+    });
+    expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("ret_msg");
     done();
   });
