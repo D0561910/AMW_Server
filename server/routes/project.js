@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import admin from "../config/firebase.config";
 import dataInfo from "../utils/classes/info.module.js";
 import betweenTwoDays from '../utils/betweentwodays';
+import validation from "../utils/validation";
+import schemas from "../utils/schemas";
 
 const router = express.Router();
 
@@ -116,7 +118,7 @@ router.post("/totalUserAccess", function (req, res) {
 
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
-router.post("/updateEventInfo", async (req, res) => {
+router.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req, res) => {
 
   const user = jwt.verify(req.body.token, "secretkey");
 
