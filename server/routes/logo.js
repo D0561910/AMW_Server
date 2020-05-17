@@ -2,6 +2,13 @@ import express from "express";
 
 const router = express.Router();
 
+const m = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 10 * 1024 * 1024 // no larger than 10mb
+    }
+});
+
 // API: Uploads Logo
 router.post("/logoUpload", m.single("file"), function (req, res, next) {
     var sess = req.session;

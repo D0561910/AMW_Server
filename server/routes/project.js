@@ -104,7 +104,7 @@ router.post("/project/overview", async (req, res) => {
 });
 
 // API: Get Number Of Member API
-router.post("/totalUserAccess", function (req, res) {
+router.post("/totalUserAccess", (req, res) => {
   admin
     .database()
     .ref(`/event/${req.body.projectid}/UserList`)
@@ -206,65 +206,60 @@ router.post("/project/remove", function (req, res) {
 
 });
 
-
-
-
-
-
-
-// router.post("/getstatus", async function (req, res, next) {
-//     // Get project id.
-//     var db = firebase.database();
-//     var checkInfo = db.ref(`event/${req.session.prjId}`);
-//     const trip2 = await checkInfo
-//         .child(`/transportImages`)
-//         .once("value")
-//         .then((snap) => snap.val());
-//     // const trip3 = await checkInfo.child(`/sponor`).once('value').then(snap => snap.val());
-//     const trip = await checkInfo
-//         .child(`/information`)
-//         .once("value")
-//         .then((snap) => {
-//             var chkInfo = snap.val();
-//             var iStatus = "";
-//             let end = chkInfo.endDate != "";
-//             let author = chkInfo.eventAuthor != "";
-//             let loc = chkInfo.eventLocation != "";
-//             let logo = chkInfo.eventLogo != null;
-//             let name = chkInfo.eventName != "";
-//             let start = chkInfo.startDate != "";
-//             if (end && author && loc && logo && name && start) {
-//                 iStatus = "notempty";
+// API: Release Status
+// router.post("/getstatus", async (req, res) => {
+//   // Get project id.
+//   var db = firebase.database();
+//   var checkInfo = db.ref(`event/${req.session.prjId}`);
+//   const trip2 = await checkInfo
+//     .child(`/transportImages`)
+//     .once("value")
+//     .then((snap) => snap.val());
+//   // const trip3 = await checkInfo.child(`/sponor`).once('value').then(snap => snap.val());
+//   const trip = await checkInfo
+//     .child(`/information`)
+//     .once("value")
+//     .then((snap) => {
+//       var chkInfo = snap.val();
+//       var iStatus = "";
+//       let end = chkInfo.endDate != "";
+//       let author = chkInfo.eventAuthor != "";
+//       let loc = chkInfo.eventLocation != "";
+//       let logo = chkInfo.eventLogo != null;
+//       let name = chkInfo.eventName != "";
+//       let start = chkInfo.startDate != "";
+//       if (end && author && loc && logo && name && start) {
+//         iStatus = "notempty";
+//       }
+//       return iStatus;
+//     });
+//   const trip4 = await checkInfo
+//     .child(`/schedules`)
+//     .once("value")
+//     .then((snap) => {
+//       var event = snap.val();
+//       var eStatus = "notEmpty";
+//       for (let i in event) {
+//         var keyValue = event[i];
+//         for (let j in keyValue) {
+//           if (j !== "empty") {
+//             if (keyValue[j].empty) {
+//               eStatus = "empty";
 //             }
-//             return iStatus;
-//         });
-//     const trip4 = await checkInfo
-//         .child(`/schedules`)
-//         .once("value")
-//         .then((snap) => {
-//             var event = snap.val();
-//             var eStatus = "notEmpty";
-//             for (let i in event) {
-//                 var keyValue = event[i];
-//                 for (let j in keyValue) {
-//                     if (j !== "empty") {
-//                         if (keyValue[j].empty) {
-//                             eStatus = "empty";
-//                         }
-//                     }
-//                 }
-//             }
-//             return eStatus;
-//         });
-//     var transStatus = trip2 != null;
-//     var infoStatus = trip != "";
-//     var eventStatus = trip4 != "empty";
-//     let obj = {
-//         infoStatus,
-//         transStatus,
-//         eventStatus,
-//     };
-//     res.send(obj);
+//           }
+//         }
+//       }
+//       return eStatus;
+//     });
+//   var transStatus = trip2 != null;
+//   var infoStatus = trip != "";
+//   var eventStatus = trip4 != "empty";
+//   let obj = {
+//     infoStatus,
+//     transStatus,
+//     eventStatus,
+//   };
+//   res.send(obj);
 // });
 
 export default router;
