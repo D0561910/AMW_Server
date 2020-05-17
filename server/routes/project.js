@@ -167,6 +167,74 @@ router.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req,
 
 });
 
+// API: Remove Project
+// @Request Parameters: Token, Project ID and Project Name
+router.post("/project/remove", function (req, res) {
+
+  const user = jwt.verify(req.body.token, "secretkey");
+
+  admin.database().ref(`/projects`).once("value").then((snap) => {
+    var child = snap.val();
+    var verifyStatus = false;
+    var projectKey = " ";
+    for (let key in child) {
+      var vaildId = req.body.projectid === child[key].projectId;
+      var validName = req.body.projectname === child[key].projectName;
+      var vaildUser = user.email === child[key].creator;
+      if (vaildId && validName && vaildUser) {
+        verifyStatus = true;
+        projectKey = key;
+      }
+    }
+
+    console.log(req.body.projectid);
+    console.log(req.body.projectname);
+    console.log(user.email);
+    console.log(child);
+    console.log({ verifyStatus });
+    console.log({ projectKey });
+
+    if (verifyStatus) {
+      admin.database().ref(`/projects/${projectKey}`).remove();
+      admin.database().ref(`/event/${req.body.projectid}`).remove();
+      res.status(201).json({ msg: "Remove Successfully" });
+    }
+    else {
+      res.status(400).json({ errmsg: "Parameters Error" });
+    }
+  })
+
+
+  // if (prjid !== prjId && prjname !== projectName) {
+  //     res.redirect("/logout");
+  // }
+  // var db = firebase.database();
+  // var rmEventRef = db.ref(`/event/${prjid}`);
+  // var projectRef = db.ref(`/project`);
+  // const promiseRemove = new Promise((resolve, reject) => {
+  //     projectRef.on("value", function (snapshot) {
+  //         var proj = snapshot.val();
+  //         var key = " ";
+  //         for (let i in proj) {
+  //             var vaildId = prjid === proj[i].projectId;
+  //             var validName = prjname === proj[i].projectName;
+  //             var vaildUser = userid === proj[i].userId;
+  //             if (vaildId && validName && vaildUser) {
+  //                 key = i;
+  //             }
+  //         }
+  //         resolve(key);
+  //     });
+  // });
+  // promiseRemove.then((response) => {
+  //     var rmProjectRef = projectRef.child(`/${response}`);
+  //     rmEventRef.remove();
+  //     rmProjectRef.remove();
+  //     res.send("Remove Successful");
+  // });
+  // res.send("Remove Successful");
+});
+
 // // API: Uploads Logo
 // router.post("/logoUpload", m.single("file"), function (req, res, next) {
 //     var sess = req.session;
@@ -309,47 +377,7 @@ router.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req,
 //         });
 // });
 
-// // API: Remove Project
-// router.post("/rmproject", function (req, res, next) {
-//     var prjname = req.body.projectname;
-//     var prjid = req.body.projectid;
-//     prjname = prjname.trim();
-//     prjid = prjid.trim();
-//     var sess = req.session;
-//     var loginUser = sess.loginUser;
-//     var userEmail = sess.userEmail;
-//     var prjId = sess.prjId;
-//     var projectName = sess.prj;
-//     var isLogined = !!loginUser;
-//     var userid = sess.uid;
-//     if (prjid !== prjId && prjname !== projectName) {
-//         res.redirect("/logout");
-//     }
-//     var db = firebase.database();
-//     var rmEventRef = db.ref(`/event/${prjid}`);
-//     var projectRef = db.ref(`/project`);
-//     const promiseRemove = new Promise((resolve, reject) => {
-//         projectRef.on("value", function (snapshot) {
-//             var proj = snapshot.val();
-//             var key = " ";
-//             for (let i in proj) {
-//                 var vaildId = prjid === proj[i].projectId;
-//                 var validName = prjname === proj[i].projectName;
-//                 var vaildUser = userid === proj[i].userId;
-//                 if (vaildId && validName && vaildUser) {
-//                     key = i;
-//                 }
-//             }
-//             resolve(key);
-//         });
-//     });
-//     promiseRemove.then((response) => {
-//         var rmProjectRef = projectRef.child(`/${response}`);
-//         rmEventRef.remove();
-//         rmProjectRef.remove();
-//         res.send("Remove Successful");
-//     });
-// });
+
 
 // router.post("/getstatus", async function (req, res, next) {
 //     // Get project id.
