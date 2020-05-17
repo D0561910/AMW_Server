@@ -73,7 +73,6 @@ router.post("/projets", (req, res) => {
 // API: Getting select project overview details.
 router.post("/project/overview", async (req, res) => {
   const user = jwt.verify(req.body.token, "secretkey");
-
   var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
   const reletrip = await releaseREF.once("value").then((snap) => snap.val());
 
@@ -119,12 +118,9 @@ router.post("/totalUserAccess", (req, res) => {
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
 router.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req, res) => {
-
   const user = jwt.verify(req.body.token, "secretkey");
-
   var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
   var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
-
   const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
 
   // Here is update event Information
@@ -164,15 +160,12 @@ router.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req,
     admin.database().ref().update(newSchedules);
     res.status(201).json({ msg: "Update Basic Information and Event Date Successfully" })
   }
-
 });
 
 // API: Remove Project
 // @Request Parameters: Token, Project ID and Project Name
 router.post("/project/remove", function (req, res) {
-
   const user = jwt.verify(req.body.token, "secretkey");
-
   admin.database().ref(`/projects`).once("value").then((snap) => {
     var child = snap.val();
     var verifyStatus = false;
@@ -186,14 +179,6 @@ router.post("/project/remove", function (req, res) {
         projectKey = key;
       }
     }
-
-    console.log(req.body.projectid);
-    console.log(req.body.projectname);
-    console.log(user.email);
-    console.log(child);
-    console.log({ verifyStatus });
-    console.log({ projectKey });
-
     if (verifyStatus) {
       admin.database().ref(`/projects/${projectKey}`).remove();
       admin.database().ref(`/event/${req.body.projectid}`).remove();
@@ -202,8 +187,7 @@ router.post("/project/remove", function (req, res) {
     else {
       res.status(400).json({ errmsg: "Parameters Error" });
     }
-  })
-
+  });
 });
 
 // API: Release Status
