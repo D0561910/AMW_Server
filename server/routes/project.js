@@ -3,6 +3,7 @@ import moment from "moment";
 import jwt from "jsonwebtoken";
 import admin from "../config/firebase.config";
 import dataInfo from "../utils/classes/info.module.js";
+import betweenTwoDays from '../utils/betweentwodays';
 
 const router = express.Router();
 
@@ -100,7 +101,7 @@ router.post("/project/overview", async (req, res) => {
     });
 });
 
-// Get Number Of Member API
+// API: Get Number Of Member API
 router.post("/totalUserAccess", function (req, res) {
   admin
     .database()
@@ -113,84 +114,55 @@ router.post("/totalUserAccess", function (req, res) {
     });
 });
 
+// API: Update Basic Event Information && Create/Update Event Date
+// @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
 router.post("/updateEventInfo", async (req, res) => {
-  // what we need here 
-  // project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, userId
 
-  // var sess = req.session;
-  // var loginUser = sess.loginUser;
-  // var userID = sess.uid;
-  // var prjId = sess.prjId;
-  // var dateStart = moment(`${req.body.startdate}`, "YYYY-MM-DD").format("l");
-  // var dateEnd = moment(`${req.body.enddate}`, "YYYY-MM-DD").format("l");
-  // var db = firebase.database();
-  // var infoRef = db.ref(`/event/${prjId}/information`);
-  // var releaseRef = db.ref(`/event/${prjId}/`);
-  // var dateChk = db.ref(`/event/${prjId}/schedules/`);
-  // const date_log = getDatesDiff(dateStart.valueOf(), dateEnd.valueOf());
-  // const reletrip = await dateChk.once("value").then((snap) => {
-  //     var index = snap.val();
-  //     var array = [];
-  //     for (let i in index) array.push(i);
-  //     return array;
-  // });
-  // if (req.body.projStatus === "1") {
-  //     releaseRef.update({
-  //         release: true,
-  //     });
-  // }
-  // if (req.body.projStatus === "2") {
-  //     releaseRef.update({
-  //         release: false,
-  //     });
-  // }
-  // if (JSON.stringify(date_log) == JSON.stringify(reletrip)) {
-  //     // if match means user just update other infomation only
-  //     // console.log("match");
-  // } else {
-  //     dateChk.remove();
-  //     date_log.forEach((dateIndex) => {
-  //         var dates = moment(`${dateIndex}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
-  //         var addData = db.ref(`/event/${prjId}/schedules/${dates}`);
-  //         addData.set({
-  //             empty: true,
-  //         });
-  //     });
-  // }
-  // const promiseUserIdCheck = new Promise((resolve) => {
-  //     var key = "User Id not match";
-  //     var dateReply = "";
-  //     infoRef.on("value", function (snapshot) {
-  //         var infouserid = snapshot.val();
-  //         if (infouserid.userId === userID) {
-  //             key = "match";
-  //         }
-  //     });
-  //     if (key === "match") {
-  //         obj = {
-  //             key: key,
-  //             dateReply: dateReply,
-  //         };
-  //         resolve(obj);
-  //     }
-  // });
-  // // var retValue = "";
-  // promiseUserIdCheck.then((response) => {
-  //     if (response.key === "match") {
-  //         infoRef.update({
-  //             endDate: req.body.enddate,
-  //             eventAuthor: req.body.organizer,
-  //             eventLocation: req.body.location,
-  //             eventName: req.body.evename,
-  //             startDate: req.body.startdate,
-  //             event_deatils: req.body.event_deatils,
-  //             userId: userID,
-  //         });
-  //     }
-  //     // res.redirect('/dashss');
-  //     res.send(`更醒成功`);
-  // });
-  res.send(`更醒成功`);
+  const user = jwt.verify(req.body.token, "secretkey");
+
+  var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
+  var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
+
+  const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
+
+  // Here is update event Information
+  var newEvent = {};
+  newEvent[`/event/${req.body.projectid}/information`] = {
+    creator: `${user.email}`,
+    endDate: `${req.body.endDate}`,
+    eventAuthor: `${req.body.eventAuthor}`,
+    eventLocation: `${req.body.eventLocation}`,
+    eventName: `${req.body.eventName}`,
+    event_deatils: `${req.body.event_deatils}`,
+    startDate: `${req.body.startDate}`,
+  }
+
+  // Get Schedules date array
+  const database_Date_Log = await admin.database().ref(`/event/${req.body.projectid}/schedules/`).once("value").then((snap) => {
+    var items = snap.val();
+    var array = [];
+    for (let item in items) array.push(item);
+    return array;
+  });
+
+  // Check that both matrices have the same date history
+  if (JSON.stringify(two_Date_Log) === JSON.stringify(database_Date_Log)) {
+    admin.database().ref().update(newEvent);
+    res.status(202).json({ msg: "Update Basic Information Successfully" });
+  } else {
+    var newSchedules = {}
+    two_Date_Log.forEach((date) => {
+      var eachDate = moment(`${date}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
+      newSchedules[`/event/${req.body.projectid}/schedules/${eachDate}`] = {
+        isEmpty: true
+      }
+    });
+    admin.database().ref().update(newEvent);
+    admin.database().ref(`/event/${req.body.projectid}/schedules/`).remove();
+    admin.database().ref().update(newSchedules);
+    res.status(201).json({ msg: "Update Basic Information and Event Date Successfully" })
+  }
+
 });
 
 // // API: Uploads Logo
