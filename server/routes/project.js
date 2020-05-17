@@ -204,35 +204,6 @@ router.post("/project/remove", function (req, res) {
     }
   })
 
-
-  // if (prjid !== prjId && prjname !== projectName) {
-  //     res.redirect("/logout");
-  // }
-  // var db = firebase.database();
-  // var rmEventRef = db.ref(`/event/${prjid}`);
-  // var projectRef = db.ref(`/project`);
-  // const promiseRemove = new Promise((resolve, reject) => {
-  //     projectRef.on("value", function (snapshot) {
-  //         var proj = snapshot.val();
-  //         var key = " ";
-  //         for (let i in proj) {
-  //             var vaildId = prjid === proj[i].projectId;
-  //             var validName = prjname === proj[i].projectName;
-  //             var vaildUser = userid === proj[i].userId;
-  //             if (vaildId && validName && vaildUser) {
-  //                 key = i;
-  //             }
-  //         }
-  //         resolve(key);
-  //     });
-  // });
-  // promiseRemove.then((response) => {
-  //     var rmProjectRef = projectRef.child(`/${response}`);
-  //     rmEventRef.remove();
-  //     rmProjectRef.remove();
-  //     res.send("Remove Successful");
-  // });
-  // res.send("Remove Successful");
 });
 
 // // API: Uploads Logo
