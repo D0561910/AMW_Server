@@ -37,7 +37,7 @@ router.post("/event/create", (req, res) => {
   });
 
   res.status(201).json({
-    msg: "Event Created"
+    msg: "Event Created",
   });
 });
 
@@ -62,7 +62,7 @@ router.post("/projets", (req, res) => {
         }
       }
       res.status(201).json({
-        data: projects
+        data: projects,
       });
     });
 });
@@ -90,11 +90,11 @@ router.post("/project/overview", async (req, res) => {
         data.event_deatils = child.event_deatils;
         data.release = reletrip;
         res.status(201).json({
-          data
+          data,
         });
       } else {
         res.status(400).json({
-          errmsg: "User ID not match"
+          errmsg: "User ID not match",
         });
       }
     });
@@ -102,96 +102,96 @@ router.post("/project/overview", async (req, res) => {
 
 // Get Number Of Member API
 router.post("/totalUserAccess", function (req, res) {
-  admin.database().ref(`/event/${req.body.projectid}/UserList`).once("value").then((snap) => {
-    res.status(201).json({
-      data: snap.numChildren(),
+  admin
+    .database()
+    .ref(`/event/${req.body.projectid}/UserList`)
+    .once("value")
+    .then((snap) => {
+      res.status(201).json({
+        data: snap.numChildren(),
+      });
     });
-  });
 });
 
-// router.post("/updatedetails", async function (req, res, next) {
-//     var sess = req.session;
-//     var loginUser = sess.loginUser;
-//     var userID = sess.uid;
-//     var prjId = sess.prjId;
-//     var dateStart = moment(`${req.body.startdate}`, "YYYY-MM-DD").format("l");
-//     var dateEnd = moment(`${req.body.enddate}`, "YYYY-MM-DD").format("l");
+router.post("/updateEventInfo", async (req, res) => {
+  // what we need here 
+  // project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, userId
 
-//     var db = firebase.database();
-//     var infoRef = db.ref(`/event/${prjId}/information`);
-//     var releaseRef = db.ref(`/event/${prjId}/`);
-//     var dateChk = db.ref(`/event/${prjId}/schedules/`);
-
-//     const date_log = getDatesDiff(dateStart.valueOf(), dateEnd.valueOf());
-
-//     const reletrip = await dateChk.once("value").then((snap) => {
-//         var index = snap.val();
-//         var array = [];
-//         for (let i in index) array.push(i);
-//         return array;
-//     });
-
-//     if (req.body.projStatus === "1") {
-//         releaseRef.update({
-//             release: true,
-//         });
-//     }
-//     if (req.body.projStatus === "2") {
-//         releaseRef.update({
-//             release: false,
-//         });
-//     }
-
-//     if (JSON.stringify(date_log) == JSON.stringify(reletrip)) {
-//         // if match means user just update other infomation only
-//         // console.log("match");
-//     } else {
-//         dateChk.remove();
-//         date_log.forEach((dateIndex) => {
-//             var dates = moment(`${dateIndex}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
-//             var addData = db.ref(`/event/${prjId}/schedules/${dates}`);
-//             addData.set({
-//                 empty: true,
-//             });
-//         });
-//     }
-
-//     const promiseUserIdCheck = new Promise((resolve) => {
-//         var key = "User Id not match";
-//         var dateReply = "";
-//         infoRef.on("value", function (snapshot) {
-//             var infouserid = snapshot.val();
-//             if (infouserid.userId === userID) {
-//                 key = "match";
-//             }
-//         });
-
-//         if (key === "match") {
-//             obj = {
-//                 key: key,
-//                 dateReply: dateReply,
-//             };
-//             resolve(obj);
-//         }
-//     });
-
-//     // var retValue = "";
-//     promiseUserIdCheck.then((response) => {
-//         if (response.key === "match") {
-//             infoRef.update({
-//                 endDate: req.body.enddate,
-//                 eventAuthor: req.body.organizer,
-//                 eventLocation: req.body.location,
-//                 eventName: req.body.evename,
-//                 startDate: req.body.startdate,
-//                 event_deatils: req.body.event_deatils,
-//                 userId: userID,
-//             });
-//         }
-//         // res.redirect('/dashss');
-//         res.send(`更醒成功`);
-//     });
-// });
+  // var sess = req.session;
+  // var loginUser = sess.loginUser;
+  // var userID = sess.uid;
+  // var prjId = sess.prjId;
+  // var dateStart = moment(`${req.body.startdate}`, "YYYY-MM-DD").format("l");
+  // var dateEnd = moment(`${req.body.enddate}`, "YYYY-MM-DD").format("l");
+  // var db = firebase.database();
+  // var infoRef = db.ref(`/event/${prjId}/information`);
+  // var releaseRef = db.ref(`/event/${prjId}/`);
+  // var dateChk = db.ref(`/event/${prjId}/schedules/`);
+  // const date_log = getDatesDiff(dateStart.valueOf(), dateEnd.valueOf());
+  // const reletrip = await dateChk.once("value").then((snap) => {
+  //     var index = snap.val();
+  //     var array = [];
+  //     for (let i in index) array.push(i);
+  //     return array;
+  // });
+  // if (req.body.projStatus === "1") {
+  //     releaseRef.update({
+  //         release: true,
+  //     });
+  // }
+  // if (req.body.projStatus === "2") {
+  //     releaseRef.update({
+  //         release: false,
+  //     });
+  // }
+  // if (JSON.stringify(date_log) == JSON.stringify(reletrip)) {
+  //     // if match means user just update other infomation only
+  //     // console.log("match");
+  // } else {
+  //     dateChk.remove();
+  //     date_log.forEach((dateIndex) => {
+  //         var dates = moment(`${dateIndex}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
+  //         var addData = db.ref(`/event/${prjId}/schedules/${dates}`);
+  //         addData.set({
+  //             empty: true,
+  //         });
+  //     });
+  // }
+  // const promiseUserIdCheck = new Promise((resolve) => {
+  //     var key = "User Id not match";
+  //     var dateReply = "";
+  //     infoRef.on("value", function (snapshot) {
+  //         var infouserid = snapshot.val();
+  //         if (infouserid.userId === userID) {
+  //             key = "match";
+  //         }
+  //     });
+  //     if (key === "match") {
+  //         obj = {
+  //             key: key,
+  //             dateReply: dateReply,
+  //         };
+  //         resolve(obj);
+  //     }
+  // });
+  // // var retValue = "";
+  // promiseUserIdCheck.then((response) => {
+  //     if (response.key === "match") {
+  //         infoRef.update({
+  //             endDate: req.body.enddate,
+  //             eventAuthor: req.body.organizer,
+  //             eventLocation: req.body.location,
+  //             eventName: req.body.evename,
+  //             startDate: req.body.startdate,
+  //             event_deatils: req.body.event_deatils,
+  //             userId: userID,
+  //         });
+  //     }
+  //     // res.redirect('/dashss');
+  //     res.send(`更醒成功`);
+  // });
+  res.send(`更醒成功`);
+});
 
 // // API: Uploads Logo
 // router.post("/logoUpload", m.single("file"), function (req, res, next) {
