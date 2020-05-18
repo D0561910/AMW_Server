@@ -48,7 +48,9 @@
   "jest": {
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      "./server/bin/www.js",
+      "./server/utils/AppError.js"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },
