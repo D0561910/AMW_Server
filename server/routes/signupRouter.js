@@ -5,9 +5,9 @@ import validation from "../utils/validation";
 import schemas from "../utils/schemas";
 import checkEmailValidation from "../utils/checkEmailValidation";
 
-const router = express.Router();
+const signupRouter = express.Router();
 
-router.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
+signupRouter.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
   const reply = await checkEmailValidation(req.body.email);
 
   const saltRounds = 10;
@@ -31,4 +31,4 @@ router.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
   }
 });
 
-export default router;
+export default signupRouter;

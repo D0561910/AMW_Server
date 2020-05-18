@@ -14,7 +14,7 @@ const schemas = {
         password: Joi.string().regex(/^[\w]{6,30}$/).required()
     }),
     basicInfoSchema: Joi.object().keys({
-        token: Joi.string().regex(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_.+/=]*$/).required(),
+        token: Joi.string().min(2).max(1000).required(),
         projectid: Joi.string().min(2).max(100).required(),
         startDate: Joi.date().optional().min(`${since}`).required(),
         endDate: Joi.date().optional().max(`${maxDate}`).required(),

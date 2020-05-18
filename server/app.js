@@ -3,11 +3,11 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import APPError from "./utils/AppError";
 
-import indexRouter from "./routes/index";
-import usersRouter from "./routes/users";
-import loginRouter from "./routes/login";
-import signUpRouter from "./routes/signup";
-import projectRouter from "./routes/project";
+import indexRouter from "./routes/indexRouter";
+import usersRouter from "./routes/usersRouter";
+import loginRouter from "./routes/loginRouter";
+import signUpRouter from "./routes/signupRouter";
+import projectRouter from "./routes/projectRouter";
 
 var app = express();
 

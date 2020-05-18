@@ -4,9 +4,9 @@ import findUser from "../utils/findUser";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
 
-const router = express.Router();
+const loginRouter = express.Router();
 
-router.post("/login", validation(schemas.loginSchema), async (req, res) => {
+loginRouter.post("/login", validation(schemas.loginSchema), async (req, res) => {
   const users = await findUser(req.body.email, req.body.password)
     .then(() => {
       return true;
@@ -27,4 +27,4 @@ router.post("/login", validation(schemas.loginSchema), async (req, res) => {
   }
 });
 
-export default router;
+export default loginRouter;
