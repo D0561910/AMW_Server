@@ -1,19 +1,18 @@
 import express from "express";
 import moment from "moment";
-import jwt from "jsonwebtoken";
 import admin from "../config/firebase.config";
 import dataInfo from "../utils/classes/dataInfo.js";
 import betweenTwoDays from '../utils/betweentwodays';
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
+import verifyToken from "../utils/verifyToken"
 
 const projectRouter = express.Router();
 
 // API: User add new project
-projectRouter.post("/event/create", (req, res) => {
+projectRouter.post("/event/create", verifyToken, (req, res) => {
   var projectName = req.body.project;
   var projectID = `${projectName.split(/\s+/).join("")}-${moment.now()}`;
-  var decoded = jwt.verify(req.body.token, "SoftwareQualityAssurance");
 
   var projectRef = admin.database().ref(`/projects`);
   var eventRef = admin.database().ref(`/event/${projectID}/information`);
@@ -22,7 +21,7 @@ projectRouter.post("/event/create", (req, res) => {
   projectRef.push({
     projectId: projectID,
     projectName,
-    creator: decoded.email,
+    creator: req.email,
   });
 
   releaseRef.update({
@@ -36,7 +35,7 @@ projectRouter.post("/event/create", (req, res) => {
     eventName: "",
     startDate: "",
     event_deatils: "",
-    creator: decoded.email,
+    creator: req.email,
   });
 
   res.status(201).json({
@@ -45,9 +44,7 @@ projectRouter.post("/event/create", (req, res) => {
 });
 
 // API: Getting project view for management page.
-projectRouter.post("/projets", (req, res) => {
-  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
-  // user.email //user email address as ID
+projectRouter.post("/projets", verifyToken, (req, res) => {
 
   admin
     .database()
@@ -57,7 +54,7 @@ projectRouter.post("/projets", (req, res) => {
       var child = snap.val();
       var projects = [];
       for (let i in child) {
-        if (child[i].creator === user.email) {
+        if (child[i].creator === req.email) {
           projects.push({
             projectId: child[i].projectId,
             projectName: child[i].projectName,
@@ -71,8 +68,7 @@ projectRouter.post("/projets", (req, res) => {
 });
 
 // API: Getting select project overview details.
-projectRouter.post("/project/overview", async (req, res) => {
-  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
+projectRouter.post("/project/overview", verifyToken, async (req, res) => {
   var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
   const reletrip = await releaseREF.once("value").then((snap) => snap.val());
 
@@ -83,7 +79,7 @@ projectRouter.post("/project/overview", async (req, res) => {
     .then((snap) => {
       const child = snap.val();
       var data = new dataInfo();
-      if (child.creator === user.email) {
+      if (child.creator === req.email) {
         data.endDate = child.endDate;
         data.eventAuthor = child.eventAuthor;
         data.eventLocation = child.eventLocation;
@@ -103,7 +99,7 @@ projectRouter.post("/project/overview", async (req, res) => {
 });
 
 // API: Get Number Of Member API
-projectRouter.post("/totalUserAccess", (req, res) => {
+projectRouter.post("/totalUserAccess", verifyToken, (req, res) => {
   admin
     .database()
     .ref(`/event/${req.body.projectid}/UserList`)
@@ -117,8 +113,7 @@ projectRouter.post("/totalUserAccess", (req, res) => {
 
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
-projectRouter.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req, res) => {
-  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
+projectRouter.post("/updateEventInfo", verifyToken, validation(schemas.basicInfoSchema), async (req, res) => {
   var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
   var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
   const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
@@ -126,7 +121,7 @@ projectRouter.post("/updateEventInfo", validation(schemas.basicInfoSchema), asyn
   // Here is update event Information
   var newEvent = {};
   newEvent[`/event/${req.body.projectid}/information`] = {
-    creator: `${user.email}`,
+    creator: `${req.email}`,
     endDate: `${req.body.endDate}`,
     eventAuthor: `${req.body.eventAuthor}`,
     eventLocation: `${req.body.eventLocation}`,
@@ -164,8 +159,7 @@ projectRouter.post("/updateEventInfo", validation(schemas.basicInfoSchema), asyn
 
 // API: Remove Project
 // @Request Parameters: Token, Project ID and Project Name
-projectRouter.post("/project/remove", function (req, res) {
-  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
+projectRouter.post("/project/remove", verifyToken, function (req, res) {
   admin.database().ref(`/projects`).once("value").then((snap) => {
     var child = snap.val();
     var verifyStatus = false;
@@ -173,7 +167,7 @@ projectRouter.post("/project/remove", function (req, res) {
     for (let key in child) {
       var vaildId = req.body.projectid === child[key].projectId;
       var validName = req.body.projectname === child[key].projectName;
-      var vaildUser = user.email === child[key].creator;
+      var vaildUser = req.email === child[key].creator;
       if (vaildId && validName && vaildUser) {
         verifyStatus = true;
         projectKey = key;

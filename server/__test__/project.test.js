@@ -18,7 +18,7 @@ beforeAll(async () => {
 // @Test '/api/event/create' route with parameters;
 describe("Post Create New Project", () => {
   it("Create New Event Project", async (done) => {
-    const res = await request(server).post("/api/event/create").send({
+    const res = await request(server).post("/api/event/create").set('authorization', `${TOKEN}`).send({
       project: PROJECTNAME,
       token: TOKEN,
     });
@@ -31,7 +31,7 @@ describe("Post Create New Project", () => {
 // @Test '/api/projets' route with parameters;
 describe("Post get all project create by user", () => {
   it("Request user project", async (done) => {
-    const res = await request(server).post("/api/projets").send({
+    const res = await request(server).post("/api/projets").set('authorization', `${TOKEN}`).send({
       email: EMAIL,
       token: TOKEN,
     });
@@ -45,7 +45,7 @@ describe("Post get all project create by user", () => {
 // @Test '/api/project/overview' route with parameters;
 describe("Get Dashboard Data", () => {
   it("Request Basic Event Infomation", async (done) => {
-    const res = await request(server).post("/api/project/overview").send({
+    const res = await request(server).post("/api/project/overview").set('authorization', `${TOKEN}`).send({
       projectid: PROJECTID,
       token: TOKEN,
     });
@@ -61,7 +61,7 @@ describe("Get Dashboard Data", () => {
     const loginResult = await request(server)
       .post("/api/login")
       .send({ email: "test2@gmail.com", password: "123456" });
-    const res = await request(server).post("/api/project/overview").send({
+    const res = await request(server).post("/api/project/overview").set('authorization', `${loginResult.body.token}`).send({
       projectid: PROJECTID,
       token: loginResult.body.token,
     });
@@ -74,7 +74,7 @@ describe("Get Dashboard Data", () => {
 // @Test '/api/totalUserAccess' route with parameters;
 describe("API Get Participants", () => {
   it("Request Total Num of Participants", async (done) => {
-    const res = await request(server).post("/api/totalUserAccess").send({
+    const res = await request(server).post("/api/totalUserAccess").set('authorization', `${TOKEN}`).send({
       projectid: PROJECTID,
       token: TOKEN,
     });
@@ -87,7 +87,7 @@ describe("API Get Participants", () => {
 // @Test '/api/updateEventInfo' route update all event information;
 describe("Update Basic Event Information", () => {
   it("Update Basic Event Information", async (done) => {
-    const res = await request(server).post("/api/updateEventInfo").send({
+    const res = await request(server).post("/api/updateEventInfo").set('authorization', `${TOKEN}`).send({
       projectid: PROJECTID,
       token: TOKEN,
       endDate: `2020-06-21`,
@@ -106,7 +106,7 @@ describe("Update Basic Event Information", () => {
 // @Test '/api/updateEventInfo' route update information only;
 describe("Update Basic Event Information", () => {
   it("Update Basic Event Information", async (done) => {
-    const res = await request(server).post("/api/updateEventInfo").send({
+    const res = await request(server).post("/api/updateEventInfo").set('authorization', `${TOKEN}`).send({
       projectid: PROJECTID,
       token: TOKEN,
       endDate: `2020-06-21`,
@@ -125,7 +125,7 @@ describe("Update Basic Event Information", () => {
 // @Test '/api/project/remove' route with parameters;
 describe("Remove Project", () => {
   it("Remove Project", async (done) => {
-    const res = await request(server).post("/api/project/remove").send({
+    const res = await request(server).post("/api/project/remove").set('authorization', `${TOKEN}`).send({
       projectid: PROJECTID,
       token: TOKEN,
       projectname: PROJECTNAME,
@@ -142,7 +142,7 @@ describe("Remove Project", () => {
     const loginResult = await request(server)
       .post("/api/login")
       .send({ email: "test2@gmail.com", password: "123456" });
-    const res = await request(server).post("/api/project/remove").send({
+    const res = await request(server).post("/api/project/remove").set('authorization', `${loginResult.body.token}`).send({
       projectid: PROJECTID,
       token: loginResult.body.token,
       projectname: PROJECTNAME,
