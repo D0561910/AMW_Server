@@ -1,7 +1,7 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
 const since = moment().format("YYYY-MM-DD");
-const maxDate = moment().add(150, 'days').calendar();
+const maxDate = moment().add(7, 'days').calendar();
 
 const schemas = {
     loginSchema: Joi.object().keys({
