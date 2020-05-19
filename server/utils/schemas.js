@@ -1,7 +1,6 @@
 import Joi from "@hapi/joi";
 import moment from "moment";
 const since = moment().format("YYYY-MM-DD");
-const maxDate = moment().add(7, 'days').calendar();
 
 const schemas = {
     loginSchema: Joi.object().keys({
@@ -16,7 +15,7 @@ const schemas = {
     basicInfoSchema: Joi.object().keys({
         projectid: Joi.string().min(2).max(100).required(),
         startDate: Joi.date().optional().min(`${since}`).required(),
-        endDate: Joi.date().optional().max(`${maxDate}`).required(),
+        endDate: Joi.date().optional().required(),
         eventAuthor: Joi.string().min(2).max(20).required(),
         eventLocation: Joi.string().min(2).max(200).required(),
         eventName: Joi.string().min(2).max(100).required(),

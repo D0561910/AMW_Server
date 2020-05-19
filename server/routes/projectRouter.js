@@ -2,10 +2,10 @@ import express from "express";
 import moment from "moment";
 import admin from "../config/firebase.config";
 import dataInfo from "../utils/classes/dataInfo.js";
-import betweenTwoDays from '../utils/betweentwodays';
+import betweenTwoDays from "../utils/betweentwodays";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
-import verifyToken from "../utils/verifyToken"
+import verifyToken from "../utils/verifyToken";
 
 const projectRouter = express.Router();
 
@@ -45,7 +45,6 @@ projectRouter.post("/event/create", verifyToken, (req, res) => {
 
 // API: Getting project view for management page.
 projectRouter.post("/projets", verifyToken, (req, res) => {
-
   admin
     .database()
     .ref(`/projects/`)
@@ -113,75 +112,95 @@ projectRouter.post("/totalUserAccess", verifyToken, (req, res) => {
 
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
-projectRouter.post("/updateEventInfo", verifyToken, validation(schemas.basicInfoSchema), async (req, res) => {
-  var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
-  var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
-  const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
+projectRouter.post(
+  "/updateEventInfo",
+  verifyToken,
+  validation(schemas.basicInfoSchema),
+  async (req, res) => {
+    var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
+    var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
+    const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
 
-  // Here is update event Information
-  var newEvent = {};
-  newEvent[`/event/${req.body.projectid}/information`] = {
-    creator: `${req.email}`,
-    endDate: `${req.body.endDate}`,
-    eventAuthor: `${req.body.eventAuthor}`,
-    eventLocation: `${req.body.eventLocation}`,
-    eventName: `${req.body.eventName}`,
-    event_deatils: `${req.body.event_deatils}`,
-    startDate: `${req.body.startDate}`,
+    if (two_Date_Log.length > 7) {
+      res
+        .status(400)
+        .json({ msg: "Bad request The activity must be within 7 days" });
+    }
+
+    // Here is update event Information
+    var newEvent = {};
+    newEvent[`/event/${req.body.projectid}/information`] = {
+      creator: `${req.email}`,
+      endDate: `${req.body.endDate}`,
+      eventAuthor: `${req.body.eventAuthor}`,
+      eventLocation: `${req.body.eventLocation}`,
+      eventName: `${req.body.eventName}`,
+      event_deatils: `${req.body.event_deatils}`,
+      startDate: `${req.body.startDate}`,
+    };
+
+    // Get Schedules date array
+    const database_Date_Log = await admin
+      .database()
+      .ref(`/event/${req.body.projectid}/schedules/`)
+      .once("value")
+      .then((snap) => {
+        var items = snap.val();
+        var array = [];
+        for (let item in items) array.push(item);
+        return array;
+      });
+
+    // Check that both matrices have the same date history
+    if (JSON.stringify(two_Date_Log) === JSON.stringify(database_Date_Log)) {
+      admin.database().ref().update(newEvent);
+      res.status(202).json({ msg: "Update Basic Information Successfully" });
+    } else {
+      var newSchedules = {};
+      two_Date_Log.forEach((date) => {
+        var eachDate = moment(`${date}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
+        newSchedules[`/event/${req.body.projectid}/schedules/${eachDate}`] = {
+          isEmpty: true,
+        };
+      });
+      admin.database().ref().update(newEvent);
+      admin.database().ref(`/event/${req.body.projectid}/schedules/`).remove();
+      admin.database().ref().update(newSchedules);
+      res
+        .status(201)
+        .json({ msg: "Update Basic Information and Event Date Successfully" });
+    }
   }
-
-  // Get Schedules date array
-  const database_Date_Log = await admin.database().ref(`/event/${req.body.projectid}/schedules/`).once("value").then((snap) => {
-    var items = snap.val();
-    var array = [];
-    for (let item in items) array.push(item);
-    return array;
-  });
-
-  // Check that both matrices have the same date history
-  if (JSON.stringify(two_Date_Log) === JSON.stringify(database_Date_Log)) {
-    admin.database().ref().update(newEvent);
-    res.status(202).json({ msg: "Update Basic Information Successfully" });
-  } else {
-    var newSchedules = {}
-    two_Date_Log.forEach((date) => {
-      var eachDate = moment(`${date}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
-      newSchedules[`/event/${req.body.projectid}/schedules/${eachDate}`] = {
-        isEmpty: true
-      }
-    });
-    admin.database().ref().update(newEvent);
-    admin.database().ref(`/event/${req.body.projectid}/schedules/`).remove();
-    admin.database().ref().update(newSchedules);
-    res.status(201).json({ msg: "Update Basic Information and Event Date Successfully" })
-  }
-});
+);
 
 // API: Remove Project
 // @Request Parameters: Token, Project ID and Project Name
 projectRouter.post("/project/remove", verifyToken, function (req, res) {
-  admin.database().ref(`/projects`).once("value").then((snap) => {
-    var child = snap.val();
-    var verifyStatus = false;
-    var projectKey = " ";
-    for (let key in child) {
-      var vaildId = req.body.projectid === child[key].projectId;
-      var validName = req.body.projectname === child[key].projectName;
-      var vaildUser = req.email === child[key].creator;
-      if (vaildId && validName && vaildUser) {
-        verifyStatus = true;
-        projectKey = key;
+  admin
+    .database()
+    .ref(`/projects`)
+    .once("value")
+    .then((snap) => {
+      var child = snap.val();
+      var verifyStatus = false;
+      var projectKey = " ";
+      for (let key in child) {
+        var vaildId = req.body.projectid === child[key].projectId;
+        var validName = req.body.projectname === child[key].projectName;
+        var vaildUser = req.email === child[key].creator;
+        if (vaildId && validName && vaildUser) {
+          verifyStatus = true;
+          projectKey = key;
+        }
       }
-    }
-    if (verifyStatus) {
-      admin.database().ref(`/projects/${projectKey}`).remove();
-      admin.database().ref(`/event/${req.body.projectid}`).remove();
-      res.status(201).json({ msg: "Remove Successfully" });
-    }
-    else {
-      res.status(400).json({ errmsg: "Parameters Error" });
-    }
-  });
+      if (verifyStatus) {
+        admin.database().ref(`/projects/${projectKey}`).remove();
+        admin.database().ref(`/event/${req.body.projectid}`).remove();
+        res.status(201).json({ msg: "Remove Successfully" });
+      } else {
+        res.status(400).json({ errmsg: "Parameters Error" });
+      }
+    });
 });
 
 // API: Release Status
