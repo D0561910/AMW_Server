@@ -17,10 +17,9 @@ loginRouter.post("/login", validation(schemas.loginSchema), async (req, res) => 
 
   if (users) {
     jwt.sign({ users, email: req.body.email }, "SoftwareQualityAssurance", { expiresIn: "60m" }, (err, token) => {
-      console.log(tokenSplit);
       res.status(200).json({
         msg: "Login Successfully",
-        token: `Bearer ${token}`
+        token
       });
     });
   } else {

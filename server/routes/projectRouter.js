@@ -13,7 +13,7 @@ const projectRouter = express.Router();
 projectRouter.post("/event/create", (req, res) => {
   var projectName = req.body.project;
   var projectID = `${projectName.split(/\s+/).join("")}-${moment.now()}`;
-  var decoded = jwt.verify(req.body.token, "secretkey");
+  var decoded = jwt.verify(req.body.token, "SoftwareQualityAssurance");
 
   var projectRef = admin.database().ref(`/projects`);
   var eventRef = admin.database().ref(`/event/${projectID}/information`);
