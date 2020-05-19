@@ -6,22 +6,25 @@ var TOKEN = "";
 var PROJECTID = "";
 const PROJECTNAME = "Unit-Testing";
 const EMAIL = "test@gmail.com";
+const INVAILDTOKEN = "";
 
 beforeAll(async () => {
   const loginResult = await request(server)
     .post("/api/login")
     .send({ email: "test@gmail.com", password: "123456" });
   TOKEN = loginResult.body.token;
-  console.log("1 - beforeAll");
+  console.log("1 - beforeAll - project.test.js");
 });
 
 // @Test '/api/event/create' route with parameters;
 describe("Post Create New Project", () => {
   it("Create New Event Project", async (done) => {
-    const res = await request(server).post("/api/event/create").set('authorization', `${TOKEN}`).send({
-      project: PROJECTNAME,
-      token: TOKEN,
-    });
+    const res = await request(server)
+      .post("/api/event/create")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        project: PROJECTNAME,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("msg");
     done();
@@ -31,10 +34,12 @@ describe("Post Create New Project", () => {
 // @Test '/api/projets' route with parameters;
 describe("Post get all project create by user", () => {
   it("Request user project", async (done) => {
-    const res = await request(server).post("/api/projets").set('authorization', `${TOKEN}`).send({
-      email: EMAIL,
-      token: TOKEN,
-    });
+    const res = await request(server)
+      .post("/api/projets")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        email: EMAIL,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("data");
     PROJECTID = res.body.data[0].projectId;
@@ -45,10 +50,12 @@ describe("Post get all project create by user", () => {
 // @Test '/api/project/overview' route with parameters;
 describe("Get Dashboard Data", () => {
   it("Request Basic Event Infomation", async (done) => {
-    const res = await request(server).post("/api/project/overview").set('authorization', `${TOKEN}`).send({
-      projectid: PROJECTID,
-      token: TOKEN,
-    });
+    const res = await request(server)
+      .post("/api/project/overview")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("data");
     done();
@@ -61,10 +68,12 @@ describe("Get Dashboard Data", () => {
     const loginResult = await request(server)
       .post("/api/login")
       .send({ email: "test2@gmail.com", password: "123456" });
-    const res = await request(server).post("/api/project/overview").set('authorization', `${loginResult.body.token}`).send({
-      projectid: PROJECTID,
-      token: loginResult.body.token,
-    });
+    const res = await request(server)
+      .post("/api/project/overview")
+      .set("authorization", `${loginResult.body.token}`)
+      .send({
+        projectid: PROJECTID,
+      });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("errmsg");
     done();
@@ -74,10 +83,12 @@ describe("Get Dashboard Data", () => {
 // @Test '/api/totalUserAccess' route with parameters;
 describe("API Get Participants", () => {
   it("Request Total Num of Participants", async (done) => {
-    const res = await request(server).post("/api/totalUserAccess").set('authorization', `${TOKEN}`).send({
-      projectid: PROJECTID,
-      token: TOKEN,
-    });
+    const res = await request(server)
+      .post("/api/totalUserAccess")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("data");
     done();
@@ -87,16 +98,18 @@ describe("API Get Participants", () => {
 // @Test '/api/updateEventInfo' route update all event information;
 describe("Update Basic Event Information", () => {
   it("Update Basic Event Information", async (done) => {
-    const res = await request(server).post("/api/updateEventInfo").set('authorization', `${TOKEN}`).send({
-      projectid: PROJECTID,
-      token: TOKEN,
-      endDate: `2020-06-21`,
-      eventAuthor: `Jolin Tsai`,
-      eventLocation: `Starbuck Feng Chia`,
-      eventName: `StarBucks Coffee`,
-      event_deatils: `Enjoy buy one Free one`,
-      startDate: `2020-06-20`,
-    });
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-06-21`,
+        eventAuthor: `Jolin Tsai`,
+        eventLocation: `Starbuck Feng Chia`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-06-20`,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("msg");
     done();
@@ -106,16 +119,18 @@ describe("Update Basic Event Information", () => {
 // @Test '/api/updateEventInfo' route update information only;
 describe("Update Basic Event Information", () => {
   it("Update Basic Event Information", async (done) => {
-    const res = await request(server).post("/api/updateEventInfo").set('authorization', `${TOKEN}`).send({
-      projectid: PROJECTID,
-      token: TOKEN,
-      endDate: `2020-06-21`,
-      eventAuthor: `David Tsai`,
-      eventLocation: `Carrefoure`,
-      eventName: `StarBucks Coffee`,
-      event_deatils: `Enjoy buy one Free one`,
-      startDate: `2020-06-20`,
-    });
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-06-21`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-06-20`,
+      });
     expect(res.statusCode).toEqual(202);
     expect(res.body).toHaveProperty("msg");
     done();
@@ -125,11 +140,13 @@ describe("Update Basic Event Information", () => {
 // @Test '/api/project/remove' route with parameters;
 describe("Remove Project", () => {
   it("Remove Project", async (done) => {
-    const res = await request(server).post("/api/project/remove").set('authorization', `${TOKEN}`).send({
-      projectid: PROJECTID,
-      token: TOKEN,
-      projectname: PROJECTNAME,
-    });
+    const res = await request(server)
+      .post("/api/project/remove")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        projectname: PROJECTNAME,
+      });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("msg");
     done();
@@ -142,13 +159,31 @@ describe("Remove Project", () => {
     const loginResult = await request(server)
       .post("/api/login")
       .send({ email: "test2@gmail.com", password: "123456" });
-    const res = await request(server).post("/api/project/remove").set('authorization', `${loginResult.body.token}`).send({
-      projectid: PROJECTID,
-      token: loginResult.body.token,
-      projectname: PROJECTNAME,
-    });
+    const res = await request(server)
+      .post("/api/project/remove")
+      .set("authorization", `${loginResult.body.token}`)
+      .send({
+        projectid: PROJECTID,
+        projectname: PROJECTNAME,
+      });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("errmsg");
+    done();
+  });
+});
+
+// @Test '/api/project/remove' route project ID and without token;
+describe("Remove Project", () => {
+  it("Remove Project", async (done) => {
+    const loginResult = await request(server)
+      .post("/api/login")
+      .send({ email: "test2@gmail.com", password: "123456" });
+    const res = await request(server).post("/api/project/remove").send({
+      projectid: PROJECTID,
+      projectname: PROJECTNAME,
+    });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
     done();
   });
 });

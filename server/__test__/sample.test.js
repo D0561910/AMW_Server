@@ -2,6 +2,7 @@ import request from "supertest";
 import "regenerator-runtime/runtime";
 // import server from "../bin/www";
 import server from "../app";
+import admin from "../config/firebase.config";
 
 const TEST_EMAIL = "Ronald@gmail.com";
 const TEST_PASSWORD = "123456aaccd";

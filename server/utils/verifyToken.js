@@ -21,7 +21,7 @@ function verifyToken(req, res, next) {
         next();
     } else {
         // Forbidden
-        res.sendStatus(403).json({ error: "Forbidden" });
+        res.status(403).json({ error: "Forbidden" });
     }
 }
 
