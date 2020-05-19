@@ -3,6 +3,10 @@ import "regenerator-runtime/runtime";
 // import server from "../bin/www";
 import server from "../app";
 
+const TEST_EMAIL = "Ronald@gmail.com";
+const TEST_PASSWORD = "123456aaccd";
+const TEST_USERNAME = "Donald Duch";
+
 // @Test '/' route
 describe("Get Endpoints", () => {
   it("Get root", async (done) => {
@@ -34,7 +38,7 @@ describe("Get /users", () => {
 });
 
 // @Test '/login' route with true email and password;
-describe("Post login api with true parameter", () => {
+describe("Post Login API with true email and password", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server)
       .post("/api/login")
@@ -46,7 +50,7 @@ describe("Post login api with true parameter", () => {
 });
 
 // @Test '/login' route with wrong email and password;
-describe("Post login api with error", () => {
+describe("Post Login API with wrong email and password", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server)
       .post("/api/login")
@@ -58,7 +62,7 @@ describe("Post login api with error", () => {
 });
 
 // @Test '/login' route with true email, but wrong password;
-describe("Post login api with true email, but wrong password", () => {
+describe("Post Login API with true email, but wrong password", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server)
       .post("/api/login")
@@ -70,7 +74,7 @@ describe("Post login api with true email, but wrong password", () => {
 });
 
 // @Test '/login' route with empty body;
-describe("Post login api with error", () => {
+describe("Post Login API with empty body", () => {
   it("Post /api/login", async (done) => {
     const res = await request(server).post("/api/login").send({});
     expect(res.statusCode).toEqual(422);
@@ -80,7 +84,7 @@ describe("Post login api with error", () => {
 });
 
 // @Test '/signup' route with error type;
-describe("Post login api with error", () => {
+describe("Post Sign Up API with error type", () => {
   it("Post /api/signup", async (done) => {
     const res = await request(server)
       .post("/api/signup")
@@ -91,13 +95,13 @@ describe("Post login api with error", () => {
   });
 });
 
-// @Test '/signup' route with true email, username and password;
-describe("Post login api with error", () => {
+// @Test '/signup' route with true type email, username and password;
+describe("Post Sign Up API with new email, username and password", () => {
   it("Post /api/signup", async (done) => {
     const res = await request(server).post("/api/signup").send({
-      email: "Ronald@gmail.com",
-      password: "123456aaccd",
-      name: "Donald Duch",
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD,
+      name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("ret_msg");
@@ -106,12 +110,12 @@ describe("Post login api with error", () => {
 });
 
 // @Test '/signup' route with same email, username and password;
-describe("Post login api with error", () => {
+describe("Post Sign Up API with same email, username and password", () => {
   it("Post /api/signup", async (done) => {
     const res = await request(server).post("/api/signup").send({
-      email: "Ronald@gmail.com",
-      password: "123456aaccd",
-      name: "Donald Duch",
+      email: TEST_EMAIL,
+      password: TEST_PASSWORD,
+      name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("ret_msg");
@@ -120,7 +124,7 @@ describe("Post login api with error", () => {
 });
 
 // @Test '/signup' route with empty body;
-describe("Post login api with error", () => {
+describe("Post Sign Up API with empty body", () => {
   it("Post /api/signup", async (done) => {
     const res = await request(server).post("/api/signup").send({});
     expect(res.statusCode).toEqual(422);
@@ -130,7 +134,7 @@ describe("Post login api with error", () => {
 });
 
 // @Test unknow route
-describe("Get Endpoints", () => {
+describe("Get Unknow Route", () => {
   it("Get /mains", async (done) => {
     const res = await request(server).get("/mains").send();
     expect(res.statusCode).toEqual(404);
