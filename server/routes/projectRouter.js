@@ -46,7 +46,7 @@ projectRouter.post("/event/create", (req, res) => {
 
 // API: Getting project view for management page.
 projectRouter.post("/projets", (req, res) => {
-  const user = jwt.verify(req.body.token, "secretkey");
+  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
   // user.email //user email address as ID
 
   admin
@@ -72,7 +72,7 @@ projectRouter.post("/projets", (req, res) => {
 
 // API: Getting select project overview details.
 projectRouter.post("/project/overview", async (req, res) => {
-  const user = jwt.verify(req.body.token, "secretkey");
+  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
   var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
   const reletrip = await releaseREF.once("value").then((snap) => snap.val());
 
@@ -118,7 +118,7 @@ projectRouter.post("/totalUserAccess", (req, res) => {
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
 projectRouter.post("/updateEventInfo", validation(schemas.basicInfoSchema), async (req, res) => {
-  const user = jwt.verify(req.body.token, "secretkey");
+  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
   var dateStart = moment(`${req.body.startDate}`, "YYYY-MM-DD").format("l");
   var dateEnd = moment(`${req.body.endDate}`, "YYYY-MM-DD").format("l");
   const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
@@ -165,7 +165,7 @@ projectRouter.post("/updateEventInfo", validation(schemas.basicInfoSchema), asyn
 // API: Remove Project
 // @Request Parameters: Token, Project ID and Project Name
 projectRouter.post("/project/remove", function (req, res) {
-  const user = jwt.verify(req.body.token, "secretkey");
+  const user = jwt.verify(req.body.token, "SoftwareQualityAssurance");
   admin.database().ref(`/projects`).once("value").then((snap) => {
     var child = snap.val();
     var verifyStatus = false;
