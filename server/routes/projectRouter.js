@@ -2,7 +2,7 @@ import express from "express";
 import moment from "moment";
 import admin from "../config/firebase.config";
 import dataInfo from "../utils/classes/dataInfo.js";
-import betweenTwoDays from "../utils/betweentwodays";
+import betweenTwoDays from "../utils/betweenTwoDays";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
 import verifyToken from "../utils/verifyToken";
