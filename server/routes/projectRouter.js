@@ -10,38 +10,43 @@ import verifyToken from "../utils/verifyToken";
 const projectRouter = express.Router();
 
 // API: User add new project
-projectRouter.post("/event/create", verifyToken, (req, res) => {
-  var projectName = req.body.project;
-  var projectID = `${projectName.split(/\s+/).join("")}-${moment.now()}`;
+projectRouter.post(
+  "/event/create",
+  verifyToken,
+  validation(schemas.projectNameOnly),
+  (req, res) => {
+    var projectName = req.body.project;
+    var projectID = `${projectName.split(/\s+/).join("")}-${moment.now()}`;
 
-  var projectRef = admin.database().ref(`/projects`);
-  var eventRef = admin.database().ref(`/event/${projectID}/information`);
-  var releaseRef = admin.database().ref(`/event/${projectID}/`);
+    var projectRef = admin.database().ref(`/projects`);
+    var eventRef = admin.database().ref(`/event/${projectID}/information`);
+    var releaseRef = admin.database().ref(`/event/${projectID}/`);
 
-  projectRef.push({
-    projectId: projectID,
-    projectName,
-    creator: req.email,
-  });
+    projectRef.push({
+      projectId: projectID,
+      projectName,
+      creator: req.email,
+    });
 
-  releaseRef.update({
-    release: false,
-  });
+    releaseRef.update({
+      release: false,
+    });
 
-  eventRef.set({
-    endDate: "",
-    eventAuthor: "",
-    eventLocation: "",
-    eventName: "",
-    startDate: "",
-    event_deatils: "",
-    creator: req.email,
-  });
+    eventRef.set({
+      endDate: "",
+      eventAuthor: "",
+      eventLocation: "",
+      eventName: "",
+      startDate: "",
+      event_deatils: "",
+      creator: req.email,
+    });
 
-  res.status(201).json({
-    msg: "Event Created",
-  });
-});
+    res.status(201).json({
+      msg: "Event Created",
+    });
+  }
+);
 
 // API: Getting project view for management page.
 projectRouter.post("/projets", verifyToken, (req, res) => {
@@ -67,48 +72,60 @@ projectRouter.post("/projets", verifyToken, (req, res) => {
 });
 
 // API: Getting select project overview details.
-projectRouter.post("/project/overview", verifyToken, async (req, res) => {
-  var releaseREF = admin.database().ref(`/event/${req.body.projectid}/release`);
-  const reletrip = await releaseREF.once("value").then((snap) => snap.val());
+projectRouter.post(
+  "/project/overview",
+  verifyToken,
+  validation(schemas.projectIDOnly),
+  async (req, res) => {
+    var releaseREF = admin
+      .database()
+      .ref(`/event/${req.body.projectid}/release`);
+    const reletrip = await releaseREF.once("value").then((snap) => snap.val());
 
-  admin
-    .database()
-    .ref(`/event/${req.body.projectid}/information`)
-    .once("value")
-    .then((snap) => {
-      const child = snap.val();
-      var data = new dataInfo();
-      if (child.creator === req.email) {
-        data.endDate = child.endDate;
-        data.eventAuthor = child.eventAuthor;
-        data.eventLocation = child.eventLocation;
-        data.eventName = child.eventName;
-        data.startDate = child.startDate;
-        data.event_deatils = child.event_deatils;
-        data.release = reletrip;
-        res.status(201).json({
-          data,
-        });
-      } else {
-        res.status(400).json({
-          errmsg: "User ID not match",
-        });
-      }
-    });
-});
+    admin
+      .database()
+      .ref(`/event/${req.body.projectid}/information`)
+      .once("value")
+      .then((snap) => {
+        const child = snap.val();
+        var data = new dataInfo();
+        if (child.creator === req.email) {
+          data.endDate = child.endDate;
+          data.eventAuthor = child.eventAuthor;
+          data.eventLocation = child.eventLocation;
+          data.eventName = child.eventName;
+          data.startDate = child.startDate;
+          data.event_deatils = child.event_deatils;
+          data.release = reletrip;
+          res.status(201).json({
+            data,
+          });
+        } else {
+          res.status(400).json({
+            errmsg: "User ID not match",
+          });
+        }
+      });
+  }
+);
 
 // API: Get Number Of Member API
-projectRouter.post("/totalUserAccess", verifyToken, (req, res) => {
-  admin
-    .database()
-    .ref(`/event/${req.body.projectid}/UserList`)
-    .once("value")
-    .then((snap) => {
-      res.status(201).json({
-        data: snap.numChildren(),
+projectRouter.post(
+  "/totalUserAccess",
+  verifyToken,
+  validation(schemas.projectIDOnly),
+  (req, res) => {
+    admin
+      .database()
+      .ref(`/event/${req.body.projectid}/UserList`)
+      .once("value")
+      .then((snap) => {
+        res.status(201).json({
+          data: snap.numChildren(),
+        });
       });
-    });
-});
+  }
+);
 
 // API: Update Basic Event Information && Create/Update Event Date
 // @request parameters: project ID, startdate, endDate, eventAuthor, eventLocation, eventName, event_deatils, token
@@ -175,33 +192,38 @@ projectRouter.post(
 
 // API: Remove Project
 // @Request Parameters: Token, Project ID and Project Name
-projectRouter.post("/project/remove", verifyToken, function (req, res) {
-  admin
-    .database()
-    .ref(`/projects`)
-    .once("value")
-    .then((snap) => {
-      var child = snap.val();
-      var verifyStatus = false;
-      var projectKey = " ";
-      for (let key in child) {
-        var vaildId = req.body.projectid === child[key].projectId;
-        var validName = req.body.projectname === child[key].projectName;
-        var vaildUser = req.email === child[key].creator;
-        if (vaildId && validName && vaildUser) {
-          verifyStatus = true;
-          projectKey = key;
+projectRouter.post(
+  "/project/remove",
+  verifyToken,
+  validation(schemas.removeProjectSchema),
+  (req, res) => {
+    admin
+      .database()
+      .ref(`/projects`)
+      .once("value")
+      .then((snap) => {
+        var child = snap.val();
+        var verifyStatus = false;
+        var projectKey = " ";
+        for (let key in child) {
+          var vaildId = req.body.projectid === child[key].projectId;
+          var validName = req.body.projectname === child[key].projectName;
+          var vaildUser = req.email === child[key].creator;
+          if (vaildId && validName && vaildUser) {
+            verifyStatus = true;
+            projectKey = key;
+          }
         }
-      }
-      if (verifyStatus) {
-        admin.database().ref(`/projects/${projectKey}`).remove();
-        admin.database().ref(`/event/${req.body.projectid}`).remove();
-        res.status(201).json({ msg: "Remove Successfully" });
-      } else {
-        res.status(400).json({ errmsg: "Parameters Error" });
-      }
-    });
-});
+        if (verifyStatus) {
+          admin.database().ref(`/projects/${projectKey}`).remove();
+          admin.database().ref(`/event/${req.body.projectid}`).remove();
+          res.status(201).json({ msg: "Remove Successfully" });
+        } else {
+          res.status(400).json({ errmsg: "Parameters Error" });
+        }
+      });
+  }
+);
 
 // API: Release Status
 // router.post("/getstatus", async (req, res) => {

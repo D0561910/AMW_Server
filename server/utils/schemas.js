@@ -26,6 +26,16 @@ const schemas = {
     eventName: Joi.string().min(2).max(100).required(),
     event_deatils: Joi.string().max(1000).required(),
   }),
+  projectIDOnly: Joi.object().keys({
+    projectid: Joi.string().min(2).max(100).required(),
+  }),
+  projectNameOnly: Joi.object().keys({
+    project: Joi.string().min(2).max(70).required(),
+  }),
+  removeProjectSchema: Joi.object().keys({
+    projectid: Joi.string().min(2).max(100).required(),
+    projectname: Joi.string().min(2).max(100).required(),
+  }),
 };
 
 export default schemas;
