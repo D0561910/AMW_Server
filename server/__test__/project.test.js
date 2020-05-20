@@ -1,5 +1,6 @@
 import request from "supertest";
 import "regenerator-runtime/runtime";
+import moment from "moment";
 import server from "../app";
 
 var TOKEN = "";
@@ -214,6 +215,32 @@ describe("Update Basic Event Info 5", () => {
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy one Free one`,
         startDate: `2020-01-01`,
+      });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route Invaild start days;
+describe("Update Basic Event Info 6", () => {
+  it("Update Invaild days", async (done) => {
+    var new_date = moment();
+    var day = new_date.format("DD");
+    var month = new_date.format("MM");
+    var year = new_date.format("YYYY");
+    var today = year + "-" + month + "-" + day;
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `${today}`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `${today}`,
       });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("message");
