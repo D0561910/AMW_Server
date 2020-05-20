@@ -13,7 +13,7 @@ beforeAll(async () => {
     .post("/api/login")
     .send({ email: "test@gmail.com", password: "123456" });
   TOKEN = loginResult.body.token;
-  console.log("1 - beforeAll - project.test.js");
+  // console.log("1 - beforeAll - project.test.js");
 });
 
 // @Test '/api/event/create' route with parameters;
@@ -133,6 +133,90 @@ describe("Update Basic Event Information", () => {
       });
     expect(res.statusCode).toEqual(202);
     expect(res.body).toHaveProperty("msg");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route start date and end date are greater than 7 days;
+describe("Seminar Event Start Date and End Date are greater than 7 days", () => {
+  it("Start Date and End Date are greater than 7 days", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-06-30`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-06-20`,
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("errmsg");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route Invaild days;
+describe("Update Invaild days", () => {
+  it("Update Invaild days", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-06-32`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-06-20`,
+      });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route Invaild days;
+describe("Update Invaild days", () => {
+  it("Update Invaild days", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-06-32`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-06-20`,
+      });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route Invaild start days;
+describe("Update Invaild days", () => {
+  it("Update Invaild days", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-01-03`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy one Free one`,
+        startDate: `2020-01-01`,
+      });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
     done();
   });
 });

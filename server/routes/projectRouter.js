@@ -122,9 +122,9 @@ projectRouter.post(
     const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
 
     if (two_Date_Log.length > 7) {
-      res
+      return res
         .status(400)
-        .json({ msg: "Bad request The activity must be within 7 days" });
+        .json({ errmsg: "Bad request The activity must be within 7 days" });
     }
 
     // Here is update event Information
