@@ -9,8 +9,8 @@ const TEST_PASSWORD = "123456aaccd";
 const TEST_USERNAME = "Donald Duch";
 
 // @Test '/login' route with true email and password;
-describe("Post Login API with true email and password", () => {
-  it("Post /api/login", async (done) => {
+describe("login test 1", () => {
+  it("Login API with true email and password", async (done) => {
     const res = await request(server)
       .post("/api/login")
       .send({ email: "test@gmail.com", password: "123456" });
@@ -21,8 +21,8 @@ describe("Post Login API with true email and password", () => {
 });
 
 // @Test '/login' route with wrong email and password;
-describe("Post Login API with wrong email and password", () => {
-  it("Post /api/login", async (done) => {
+describe("login test 2", () => {
+  it("Login API with wrong email and password", async (done) => {
     const res = await request(server)
       .post("/api/login")
       .send({ email: "tester@gmail.com", password: "6543211" });
@@ -33,8 +33,8 @@ describe("Post Login API with wrong email and password", () => {
 });
 
 // @Test '/login' route with true email, but wrong password;
-describe("Post Login API with true email, but wrong password", () => {
-  it("Post /api/login", async (done) => {
+describe("login test 3", () => {
+  it("Login API with true email, but wrong password", async (done) => {
     const res = await request(server)
       .post("/api/login")
       .send({ email: "test@gmail.com", password: "123456aaccd" });
@@ -45,8 +45,8 @@ describe("Post Login API with true email, but wrong password", () => {
 });
 
 // @Test '/login' route with empty body;
-describe("Post Login API with empty body", () => {
-  it("Post /api/login", async (done) => {
+describe("login test 4", () => {
+  it("Login API with empty body", async (done) => {
     const res = await request(server).post("/api/login").send({});
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("message");
@@ -56,21 +56,9 @@ describe("Post Login API with empty body", () => {
 
 // ==========================================================================================================================
 
-// @Test '/signup' route with error type;
-describe("Post Sign Up API with error type", () => {
-  it("Post /api/signup", async (done) => {
-    const res = await request(server)
-      .post("/api/signup")
-      .send({ email: "tester@", password: "12345", names: "Test" });
-    expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
-    done();
-  });
-});
-
 // @Test '/signup' route with true type email, username and password;
-describe("Post Sign Up API with new email, username and password", () => {
-  it("Post /api/signup", async (done) => {
+describe("Sign Up test 1", () => {
+  it("Sign Up API with new email, username and password", async (done) => {
     const res = await request(server).post("/api/signup").send({
       email: TEST_EMAIL,
       password: TEST_PASSWORD,
@@ -83,8 +71,8 @@ describe("Post Sign Up API with new email, username and password", () => {
 });
 
 // @Test '/signup' route with same email, username and password;
-describe("Post Sign Up API with same email, username and password", () => {
-  it("Post /api/signup", async (done) => {
+describe("Sign Up test 2", () => {
+  it("Sign Up API with same email, username and password", async (done) => {
     const res = await request(server).post("/api/signup").send({
       email: TEST_EMAIL,
       password: TEST_PASSWORD,
@@ -96,9 +84,21 @@ describe("Post Sign Up API with same email, username and password", () => {
   });
 });
 
+// @Test '/signup' route with error type;
+describe("Sign Up test 3", () => {
+  it("Sign Up API with error type", async (done) => {
+    const res = await request(server)
+      .post("/api/signup")
+      .send({ email: "tester@", password: "12345", names: "Test" });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("message");
+    done();
+  });
+});
+
 // @Test '/signup' route with empty body;
-describe("Post Sign Up API with empty body", () => {
-  it("Post /api/signup", async (done) => {
+describe("Sign Up test 4", () => {
+  it("Sign Up API with empty body", async (done) => {
     const res = await request(server).post("/api/signup").send({});
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("message");
@@ -108,7 +108,7 @@ describe("Post Sign Up API with empty body", () => {
 
 // @Test unknow route
 describe("Get Unknow Route", () => {
-  it("Get /mains", async (done) => {
+  it("Get Unknow Route", async (done) => {
     const res = await request(server).get("/mains").send();
     expect(res.statusCode).toEqual(404);
     done();
