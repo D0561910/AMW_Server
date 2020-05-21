@@ -77,7 +77,7 @@ describe("Get Dashboard Data 1", () => {
   });
 });
 
-// @Test '/api/project/overview' route project ID and error user token;
+// @Test '/api/project/overview' route with project ID and Invaild user token;
 describe("Get Dashboard Data 2", () => {
   it("Request Basic Event Infomation with project ID and error user token", async (done) => {
     const loginResult = await request(server)
@@ -95,7 +95,21 @@ describe("Get Dashboard Data 2", () => {
   });
 });
 
-// @Test '/api/totalUserAccess' route with parameters;
+// @Test '/api/project/overview' route with project ID only;
+describe("Get Dashboard Data 3", () => {
+  it("Request Basic Event Infomation with project ID only", async (done) => {
+    const res = await request(server)
+      .post("/api/project/overview")
+      .send({
+        projectid: PROJECTID,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/api/totalUserAccess' route with with project ID and user token;
 describe("API Get Participants", () => {
   it("Request Total Num of Participants", async (done) => {
     const res = await request(server)
@@ -106,6 +120,20 @@ describe("API Get Participants", () => {
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("data");
+    done();
+  });
+});
+
+// @Test '/api/totalUserAccess' route with project ID only;
+describe("API Get Participants", () => {
+  it("Request Total Num of Participants", async (done) => {
+    const res = await request(server)
+      .post("/api/totalUserAccess")
+      .send({
+        projectid: PROJECTID,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
     done();
   });
 });
