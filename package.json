@@ -8,7 +8,7 @@
     "server": "node ./dist-server/bin/www",
     "dev": "set NODE_ENV=development npm-run-all build server",
     "prod": "set NODE_ENV=production npm-run-all build server",
-    "transpile": "babel ./server --out-dir dist-server",
+    "transpile": "babel ./server --out-dir dist-server --ignore ./server/__test__/",
     "clean": "rimraf dist-server",
     "watch:dev": "nodemon",
     "sonar": "node sonar-project.js",
