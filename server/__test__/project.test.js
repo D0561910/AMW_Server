@@ -14,11 +14,10 @@ beforeAll(async () => {
     .post("/api/login")
     .send({ email: "test@gmail.com", password: "123456" });
   TOKEN = loginResult.body.token;
-  // console.log("1 - beforeAll - project.test.js");
 });
 
 // @Test '/api/event/create' route with parameters;
-describe("Post Create New Project", () => {
+describe("Post Create New Project 1", () => {
   it("Create New Event Project", async (done) => {
     const res = await request(server)
       .post("/api/event/create")
@@ -28,6 +27,21 @@ describe("Post Create New Project", () => {
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("msg");
+    done();
+  });
+});
+
+// @Test '/api/event/create' route with longest name;
+describe("Post Create New Project 3", () => {
+  it("Create New Event Project with longest name", async (done) => {
+    const res = await request(server)
+      .post("/api/event/create")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        project: "Content Marketing World & The Golden Raspberry Awards",
+      });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
