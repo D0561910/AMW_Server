@@ -8,36 +8,6 @@ const TEST_EMAIL = "Ronald@gmail.com";
 const TEST_PASSWORD = "123456aaccd";
 const TEST_USERNAME = "Donald Duch";
 
-// @Test '/' route
-describe("Get Endpoints", () => {
-  it("Get root", async (done) => {
-    const res = await request(server).get("/");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("nome");
-    done();
-  });
-});
-
-// @Test '/main' route
-describe("Get /main", () => {
-  it("Get main API", async (done) => {
-    const res = await request(server).get("/main");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("title");
-    done();
-  });
-});
-
-// @Test '/users' route
-describe("Get /users", () => {
-  it("Get users API", async (done) => {
-    const res = await request(server).get("/users");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("msg");
-    done();
-  });
-});
-
 // @Test '/login' route with true email and password;
 describe("Post Login API with true email and password", () => {
   it("Post /api/login", async (done) => {
@@ -83,6 +53,8 @@ describe("Post Login API with empty body", () => {
     done();
   });
 });
+
+// ==========================================================================================================================
 
 // @Test '/signup' route with error type;
 describe("Post Sign Up API with error type", () => {
