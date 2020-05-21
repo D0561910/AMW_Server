@@ -49,7 +49,17 @@ describe("login test 4", () => {
   it("Login API with empty body", async (done) => {
     const res = await request(server).post("/api/login").send({});
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
+    done();
+  });
+});
+
+// @Test '/login' route with error email;
+describe("login test 5", () => {
+  it("Login API with error email", async (done) => {
+    const res = await request(server).post("/api/login").send({ email: "abc", password: "1234567" });
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
@@ -91,7 +101,7 @@ describe("Sign Up test 3", () => {
       .post("/api/signup")
       .send({ email: "tester@", password: "12345", names: "Test" });
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
@@ -101,7 +111,7 @@ describe("Sign Up test 4", () => {
   it("Sign Up API with empty body", async (done) => {
     const res = await request(server).post("/api/signup").send({});
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });

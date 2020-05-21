@@ -175,7 +175,7 @@ describe("Update Basic Event Info 3", () => {
         startDate: `2020-06-20`,
       });
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
@@ -196,7 +196,7 @@ describe("Update Basic Event Info 4", () => {
         startDate: `2020-06-00`,
       });
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
@@ -217,7 +217,7 @@ describe("Update Basic Event Info 5", () => {
         startDate: `2020-01-01`,
       });
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
@@ -243,7 +243,7 @@ describe("Update Basic Event Info 6", () => {
         startDate: `${today}`,
       });
     expect(res.statusCode).toEqual(422);
-    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
