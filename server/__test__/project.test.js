@@ -110,7 +110,7 @@ describe("Get Dashboard Data 3", () => {
 });
 
 // @Test '/api/totalUserAccess' route with with project ID and user token;
-describe("API Get Participants", () => {
+describe("API Get Participants 1", () => {
   it("Request Total Num of Participants", async (done) => {
     const res = await request(server)
       .post("/api/totalUserAccess")
@@ -125,7 +125,7 @@ describe("API Get Participants", () => {
 });
 
 // @Test '/api/totalUserAccess' route with project ID only;
-describe("API Get Participants", () => {
+describe("API Get Participants 2", () => {
   it("Request Total Num of Participants", async (done) => {
     const res = await request(server)
       .post("/api/totalUserAccess")
@@ -306,8 +306,21 @@ describe("Remove Project 1", () => {
   });
 });
 
-// @Test '/api/project/remove' route with correct project ID and project name but invaild token;
+// @Test '/api/project/remove' route with correct project ID and project name but without token;
 describe("Remove Project 2", () => {
+  it("Remove Project with correct project ID and project name but without token", async (done) => {
+    const res = await request(server).post("/api/project/remove").send({
+      projectid: PROJECTID,
+      projectname: PROJECTNAME,
+    });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/api/project/remove' route with correct project ID and project name but invaild token;
+describe("Remove Project 3", () => {
   it("Remove Project with correct project ID and project name but invaild token", async (done) => {
     const loginResult = await request(server)
       .post("/api/login")
@@ -325,18 +338,37 @@ describe("Remove Project 2", () => {
   });
 });
 
-// @Test '/api/project/remove' route with correct project ID and project name but without token;
-describe("Remove Project 3", () => {
-  it("Remove Project with correct project ID and project name but without token", async (done) => {
+// @Test '/api/project/remove' route with correct token and project name only;
+describe("Remove Project 4", () => {
+  it("Remove Project with correct token and project name", async (done) => {
     const loginResult = await request(server)
       .post("/api/login")
       .send({ email: "test2@gmail.com", password: "123456" });
-    const res = await request(server).post("/api/project/remove").send({
-      projectid: PROJECTID,
-      projectname: PROJECTNAME,
-    });
-    expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    const res = await request(server)
+      .post("/api/project/remove")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: "unit",
+        projectname: PROJECTNAME,
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("errmsg");
+    done();
+  });
+});
+
+// @Test '/api/project/remove' route with correct token and project ID only;
+describe("Remove Project 5", () => {
+  it("Remove Project with correct token and project ID", async (done) => {
+    const res = await request(server)
+      .post("/api/project/remove")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        projectname: "REMOVE",
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("errmsg");
     done();
   });
 });
