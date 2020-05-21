@@ -75,7 +75,7 @@ describe("Sign Up test 1", () => {
       name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("ret_msg");
+    expect(res.body).toHaveProperty("msg");
     done();
   });
 });
@@ -89,7 +89,7 @@ describe("Sign Up test 2", () => {
       name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("ret_msg");
+    expect(res.body).toHaveProperty("errormsg");
     done();
   });
 });

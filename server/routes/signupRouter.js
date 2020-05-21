@@ -21,12 +21,12 @@ signupRouter.post("/signup", validation(schemas.signUpSchema), async (req, res) 
         password: hash,
       });
       res.status(201).json({
-        ret_msg: "Register Successfully",
+        msg: "Register Successfully",
       });
     });
   } else {
     res.status(400).json({
-      ret_msg: "E-mail Already Register try another e-mail",
+      errormsg: "E-mail Already Register try another e-mail",
     });
   }
 });
