@@ -32,6 +32,20 @@ describe("Post Create New Project 1", () => {
 });
 
 // @Test '/api/event/create' route with longest name;
+describe("Post Create New Project 2", () => {
+  it("Create New Event Project with longest name", async (done) => {
+    const res = await request(server)
+      .post("/api/event/create")
+      .send({
+        project: `${TOKEN}`,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/api/event/create' route with longest name;
 describe("Post Create New Project 3", () => {
   it("Create New Event Project with longest name", async (done) => {
     const res = await request(server)
@@ -98,11 +112,9 @@ describe("Get Dashboard Data 2", () => {
 // @Test '/api/project/overview' route with project ID only;
 describe("Get Dashboard Data 3", () => {
   it("Request Basic Event Infomation with project ID only", async (done) => {
-    const res = await request(server)
-      .post("/api/project/overview")
-      .send({
-        projectid: PROJECTID,
-      });
+    const res = await request(server).post("/api/project/overview").send({
+      projectid: PROJECTID,
+    });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();
@@ -127,18 +139,16 @@ describe("API Get Participants 1", () => {
 // @Test '/api/totalUserAccess' route with project ID only;
 describe("API Get Participants 2", () => {
   it("Request Total Num of Participants", async (done) => {
-    const res = await request(server)
-      .post("/api/totalUserAccess")
-      .send({
-        projectid: PROJECTID,
-      });
+    const res = await request(server).post("/api/totalUserAccess").send({
+      projectid: PROJECTID,
+    });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();
   });
 });
 
-// @Test '/api/updateEventInfo' route create basic event information;
+// @Test '/api/updateEventInfo' route create basic event information;@@@
 describe("Create Basic Event Info", () => {
   it("Create Basic Event Information ", async (done) => {
     const res = await request(server)
@@ -146,12 +156,12 @@ describe("Create Basic Event Info", () => {
       .set("authorization", `${TOKEN}`)
       .send({
         projectid: PROJECTID,
-        endDate: `2020-06-21`,
+        endDate: `2020-07-21`,
         eventAuthor: `Jolin Tsai`,
         eventLocation: `Starbuck Feng Chia`,
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy one Free one`,
-        startDate: `2020-06-20`,
+        startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty("msg");
@@ -159,7 +169,7 @@ describe("Create Basic Event Info", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route update information only;
+// @Test '/api/updateEventInfo' route update information only;@@@
 describe("Update Basic Event Info 1", () => {
   it("Update Basic Event Information", async (done) => {
     const res = await request(server)
@@ -167,12 +177,12 @@ describe("Update Basic Event Info 1", () => {
       .set("authorization", `${TOKEN}`)
       .send({
         projectid: PROJECTID,
-        endDate: `2020-06-21`,
+        endDate: `2020-07-21`,
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
-        event_deatils: `Enjoy buy one Free one`,
-        startDate: `2020-06-20`,
+        event_deatils: `Enjoy buy two Free one`,
+        startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(202);
     expect(res.body).toHaveProperty("msg");
@@ -192,7 +202,7 @@ describe("Update Basic Event Info 2", () => {
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
-        event_deatils: `Enjoy buy one Free one`,
+        event_deatils: `Enjoy buy two Free one`,
         startDate: `2020-06-20`,
       });
     expect(res.statusCode).toEqual(400);
@@ -201,7 +211,7 @@ describe("Update Basic Event Info 2", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route Invaild days;
+// @Test '/api/updateEventInfo' route Invaild end days;
 describe("Update Basic Event Info 3", () => {
   it("Update Invaild days", async (done) => {
     const res = await request(server)
@@ -213,7 +223,7 @@ describe("Update Basic Event Info 3", () => {
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
-        event_deatils: `Enjoy buy one Free one`,
+        event_deatils: `Enjoy buy two Free one`,
         startDate: `2020-06-20`,
       });
     expect(res.statusCode).toEqual(422);
@@ -222,7 +232,7 @@ describe("Update Basic Event Info 3", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route Invaild days;
+// @Test '/api/updateEventInfo' route Invaild start date;
 describe("Update Basic Event Info 4", () => {
   it("Update Invaild days", async (done) => {
     const res = await request(server)
@@ -234,7 +244,7 @@ describe("Update Basic Event Info 4", () => {
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
-        event_deatils: `Enjoy buy one Free one`,
+        event_deatils: `Enjoy buy two Free one`,
         startDate: `2020-06-00`,
       });
     expect(res.statusCode).toEqual(422);
@@ -243,20 +253,39 @@ describe("Update Basic Event Info 4", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route Invaild start days;
+// @Test '/api/updateEventInfo' route with no token;
 describe("Update Basic Event Info 5", () => {
-  it("Update Invaild days", async (done) => {
+  it("Update with no token", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-07-19`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy two Discount 30%`,
+        startDate: `2020-07-18`,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/api/updateEventInfo' route with no project id;
+describe("Update Basic Event Info 6", () => {
+  it("Update with no project id", async (done) => {
     const res = await request(server)
       .post("/api/updateEventInfo")
       .set("authorization", `${TOKEN}`)
       .send({
-        projectid: PROJECTID,
-        endDate: `2020-01-03`,
+        endDate: `2020-07-31`,
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy one Free one`,
-        startDate: `2020-01-01`,
+        startDate: `2020-07-30`,
       });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("typeError");
@@ -264,9 +293,9 @@ describe("Update Basic Event Info 5", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route Invaild start days;
-describe("Update Basic Event Info 6", () => {
-  it("Update Invaild days", async (done) => {
+// @Test '/api/updateEventInfo' route start date and end date is today;
+describe("Update Basic Event Info 7", () => {
+  it("Update start date and end date is today", async (done) => {
     var new_date = moment();
     var day = new_date.format("DD");
     var month = new_date.format("MM");
