@@ -10,7 +10,7 @@ const validation = (schema) => {
             const message = details.map(i => i.message).join(",");
 
             res.status(422).json({
-                message: message
+                typeError: message
             });
         }
     };
