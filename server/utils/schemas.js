@@ -30,7 +30,7 @@ const schemas = {
     projectid: Joi.string().min(2).max(100).required(),
   }),
   projectNameOnly: Joi.object().keys({
-    project: Joi.string().min(2).max(70).required(),
+    project: Joi.string().min(2).max(50).required(),
   }),
   removeProjectSchema: Joi.object().keys({
     projectid: Joi.string().min(2).max(100).required(),
