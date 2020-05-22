@@ -6,6 +6,7 @@ import betweenTwoDays from "../utils/betweenTwoDays";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
 import verifyToken from "../utils/verifyToken";
+import vaildRequest from "../utils/vaildRequest";
 
 const projectRouter = express.Router();
 
@@ -114,16 +115,25 @@ projectRouter.post(
   "/totalUserAccess",
   verifyToken,
   validation(schemas.projectIDOnly),
-  (req, res) => {
-    admin
-      .database()
-      .ref(`/event/${req.body.projectid}/UserList`)
-      .once("value")
-      .then((snap) => {
-        res.status(201).json({
-          data: snap.numChildren(),
+  async (req, res) => {
+    // check user is vaild or not.
+    const vaildUser = await vaildRequest(req.email, req.body.projectid);
+
+    if (vaildUser) {
+      admin
+        .database()
+        .ref(`/event/${req.body.projectid}/UserList`)
+        .once("value")
+        .then((snap) => {
+          res.status(201).json({
+            data: snap.numChildren(),
+          });
         });
-      });
+    } else {
+      res
+        .status(403)
+        .json({ error: "Forbidden", msg: "projectid and user id not match" });
+    }
   }
 );
 
@@ -139,53 +149,66 @@ projectRouter.post(
     const two_Date_Log = betweenTwoDays(dateStart.valueOf(), dateEnd.valueOf());
 
     if (two_Date_Log.length > 7) {
-      return res
-        .status(400)
-        .json({ errmsg: "Bad request The activity must be within 7 days" });
+      return res.status(400).json({
+        errmsg: "Bad request The activity must be within 7 days",
+      });
     }
 
-    // Here is update event Information
-    var newEvent = {};
-    newEvent[`/event/${req.body.projectid}/information`] = {
-      creator: `${req.email}`,
-      endDate: `${req.body.endDate}`,
-      eventAuthor: `${req.body.eventAuthor}`,
-      eventLocation: `${req.body.eventLocation}`,
-      eventName: `${req.body.eventName}`,
-      event_deatils: `${req.body.event_deatils}`,
-      startDate: `${req.body.startDate}`,
-    };
+    const vaildUser = await vaildRequest(req.email, req.body.projectid);
 
-    // Get Schedules date array
-    const database_Date_Log = await admin
-      .database()
-      .ref(`/event/${req.body.projectid}/schedules/`)
-      .once("value")
-      .then((snap) => {
-        var items = snap.val();
-        var array = [];
-        for (let item in items) array.push(item);
-        return array;
-      });
+    if (vaildUser) {
+      // Here is update event Information
+      var newEvent = {};
+      newEvent[`/event/${req.body.projectid}/information`] = {
+        creator: `${req.email}`,
+        endDate: `${req.body.endDate}`,
+        eventAuthor: `${req.body.eventAuthor}`,
+        eventLocation: `${req.body.eventLocation}`,
+        eventName: `${req.body.eventName}`,
+        event_deatils: `${req.body.event_deatils}`,
+        startDate: `${req.body.startDate}`,
+      };
 
-    // Check that both matrices have the same date history
-    if (JSON.stringify(two_Date_Log) === JSON.stringify(database_Date_Log)) {
-      admin.database().ref().update(newEvent);
-      res.status(202).json({ msg: "Update Basic Information Successfully" });
+      // Get Schedules date array
+      const database_Date_Log = await admin
+        .database()
+        .ref(`/event/${req.body.projectid}/schedules/`)
+        .once("value")
+        .then((snap) => {
+          var items = snap.val();
+          var array = [];
+          for (let item in items) array.push(item);
+          return array;
+        });
+
+      // Check that both matrices have the same date history
+      if (JSON.stringify(two_Date_Log) === JSON.stringify(database_Date_Log)) {
+        admin.database().ref().update(newEvent);
+        res.status(202).json({
+          msg: "Update Basic Information Successfully",
+        });
+      } else {
+        var newSchedules = {};
+        two_Date_Log.forEach((date) => {
+          var eachDate = moment(`${date}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
+          newSchedules[`/event/${req.body.projectid}/schedules/${eachDate}`] = {
+            isEmpty: true,
+          };
+        });
+        admin.database().ref().update(newEvent);
+        admin
+          .database()
+          .ref(`/event/${req.body.projectid}/schedules/`)
+          .remove();
+        admin.database().ref().update(newSchedules);
+        res.status(201).json({
+          msg: "Update Basic Information and Event Date Successfully",
+        });
+      }
     } else {
-      var newSchedules = {};
-      two_Date_Log.forEach((date) => {
-        var eachDate = moment(`${date}`, "DD-MMM-YYYY").format("DD-MMM-YYYY");
-        newSchedules[`/event/${req.body.projectid}/schedules/${eachDate}`] = {
-          isEmpty: true,
-        };
-      });
-      admin.database().ref().update(newEvent);
-      admin.database().ref(`/event/${req.body.projectid}/schedules/`).remove();
-      admin.database().ref().update(newSchedules);
       res
-        .status(201)
-        .json({ msg: "Update Basic Information and Event Date Successfully" });
+        .status(403)
+        .json({ error: "Forbidden", msg: "projectid and user id not match" });
     }
   }
 );
@@ -217,68 +240,16 @@ projectRouter.post(
         if (verifyStatus) {
           admin.database().ref(`/projects/${projectKey}`).remove();
           admin.database().ref(`/event/${req.body.projectid}`).remove();
-          res.status(201).json({ msg: "Remove Successfully" });
+          res.status(201).json({
+            msg: "Remove Successfully",
+          });
         } else {
-          res.status(400).json({ errmsg: "Parameters Error" });
+          res.status(400).json({
+            errmsg: "Parameters Error",
+          });
         }
       });
   }
 );
-
-// API: Release Status
-// router.post("/getstatus", async (req, res) => {
-//   // Get project id.
-//   var db = firebase.database();
-//   var checkInfo = db.ref(`event/${req.session.prjId}`);
-//   const trip2 = await checkInfo
-//     .child(`/transportImages`)
-//     .once("value")
-//     .then((snap) => snap.val());
-//   // const trip3 = await checkInfo.child(`/sponor`).once('value').then(snap => snap.val());
-//   const trip = await checkInfo
-//     .child(`/information`)
-//     .once("value")
-//     .then((snap) => {
-//       var chkInfo = snap.val();
-//       var iStatus = "";
-//       let end = chkInfo.endDate != "";
-//       let author = chkInfo.eventAuthor != "";
-//       let loc = chkInfo.eventLocation != "";
-//       let logo = chkInfo.eventLogo != null;
-//       let name = chkInfo.eventName != "";
-//       let start = chkInfo.startDate != "";
-//       if (end && author && loc && logo && name && start) {
-//         iStatus = "notempty";
-//       }
-//       return iStatus;
-//     });
-//   const trip4 = await checkInfo
-//     .child(`/schedules`)
-//     .once("value")
-//     .then((snap) => {
-//       var event = snap.val();
-//       var eStatus = "notEmpty";
-//       for (let i in event) {
-//         var keyValue = event[i];
-//         for (let j in keyValue) {
-//           if (j !== "empty") {
-//             if (keyValue[j].empty) {
-//               eStatus = "empty";
-//             }
-//           }
-//         }
-//       }
-//       return eStatus;
-//     });
-//   var transStatus = trip2 != null;
-//   var infoStatus = trip != "";
-//   var eventStatus = trip4 != "empty";
-//   let obj = {
-//     infoStatus,
-//     transStatus,
-//     eventStatus,
-//   };
-//   res.send(obj);
-// });
 
 export default projectRouter;
