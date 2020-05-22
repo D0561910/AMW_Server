@@ -7,13 +7,18 @@ var TOKEN = "";
 var PROJECTID = "";
 const PROJECTNAME = "Unit-Testing";
 const EMAIL = "test@gmail.com";
-const INVAILDTOKEN = "";
+var INVAILDTOKEN = "";
 
 beforeAll(async () => {
   const loginResult = await request(server)
     .post("/api/login")
     .send({ email: "test@gmail.com", password: "123456" });
+  const invaildLoginResult = await request(server)
+    .post("/api/login")
+    .send({ email: "test2@gmail.com", password: "123456" });
   TOKEN = loginResult.body.token;
+  INVAILDTOKEN = invaildLoginResult.body.token;
+  console.log({ INVAILDTOKEN });
 });
 
 // @Test '/api/event/create' route with parameters;
@@ -60,6 +65,8 @@ describe("Post Create New Project 3", () => {
   });
 });
 
+// ===================================================================================================================================================================================
+
 // @Test '/api/projets' route with parameters;
 describe("Post get all project", () => {
   it("Request user project", async (done) => {
@@ -75,6 +82,8 @@ describe("Post get all project", () => {
     done();
   });
 });
+
+// ===================================================================================================================================================================================
 
 // @Test '/api/project/overview' route with project ID and user token;
 describe("Get Dashboard Data 1", () => {
@@ -121,6 +130,8 @@ describe("Get Dashboard Data 3", () => {
   });
 });
 
+// ===================================================================================================================================================================================
+
 // @Test '/api/totalUserAccess' route with with project ID and user token;
 describe("API Get Participants 1", () => {
   it("Request Total Num of Participants", async (done) => {
@@ -138,7 +149,7 @@ describe("API Get Participants 1", () => {
 
 // @Test '/api/totalUserAccess' route with project ID only;
 describe("API Get Participants 2", () => {
-  it("Request Total Num of Participants", async (done) => {
+  it("Request Total Num of Participants with project ID only", async (done) => {
     const res = await request(server).post("/api/totalUserAccess").send({
       projectid: PROJECTID,
     });
@@ -148,7 +159,39 @@ describe("API Get Participants 2", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route create basic event information;@@@
+// @Test '/api/totalUserAccess' route with project ID and Invaild Token;
+describe("API Get Participants 3", () => {
+  it("Request Total Num of Participants with project ID and Invaild Token", async (done) => {
+    const res = await request(server)
+      .post("/api/totalUserAccess")
+      .set("authorization", `${INVAILDTOKEN}`)
+      .send({
+        projectid: PROJECTID,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// @Test '/api/totalUserAccess' route with with project ID and user token;
+describe("API Get Participants 4", () => {
+  it("Request Total Num of Participants", async (done) => {
+    const res = await request(server)
+      .post("/api/totalUserAccess")
+      .set("authorization", `${TOKEN}`)
+      .send({
+        projectid: "PROJECTID",
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// ===================================================================================================================================================================================
+
+// @Test '/api/updateEventInfo' route create basic event information;
 describe("Create Basic Event Info", () => {
   it("Create Basic Event Information ", async (done) => {
     const res = await request(server)
@@ -169,7 +212,7 @@ describe("Create Basic Event Info", () => {
   });
 });
 
-// @Test '/api/updateEventInfo' route update information only;@@@
+// @Test '/api/updateEventInfo' route update information only;
 describe("Update Basic Event Info 1", () => {
   it("Update Basic Event Information", async (done) => {
     const res = await request(server)
@@ -256,17 +299,15 @@ describe("Update Basic Event Info 4", () => {
 // @Test '/api/updateEventInfo' route with no token;
 describe("Update Basic Event Info 5", () => {
   it("Update with no token", async (done) => {
-    const res = await request(server)
-      .post("/api/updateEventInfo")
-      .send({
-        projectid: PROJECTID,
-        endDate: `2020-07-19`,
-        eventAuthor: `David Tsai`,
-        eventLocation: `Carrefoure`,
-        eventName: `StarBucks Coffee`,
-        event_deatils: `Enjoy buy two Discount 30%`,
-        startDate: `2020-07-18`,
-      });
+    const res = await request(server).post("/api/updateEventInfo").send({
+      projectid: PROJECTID,
+      endDate: `2020-07-19`,
+      eventAuthor: `David Tsai`,
+      eventLocation: `Carrefoure`,
+      eventName: `StarBucks Coffee`,
+      event_deatils: `Enjoy buy two Discount 30%`,
+      startDate: `2020-07-18`,
+    });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();
@@ -319,12 +360,32 @@ describe("Update Basic Event Info 7", () => {
   });
 });
 
+// @Test '/api/updateEventInfo' route with Invaild Token;
+describe("Update Basic Event Info 1", () => {
+  it("Update Basic Event Information with Invaild Token", async (done) => {
+    const res = await request(server)
+      .post("/api/updateEventInfo")
+      .set("authorization", `${INVAILDTOKEN}`)
+      .send({
+        projectid: PROJECTID,
+        endDate: `2020-07-31`,
+        eventAuthor: `David Tsai`,
+        eventLocation: `Carrefoure`,
+        eventName: `StarBucks Coffee`,
+        event_deatils: `Enjoy buy two Free one`,
+        startDate: `2020-07-30`,
+      });
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toHaveProperty("error");
+    done();
+  });
+});
+
+// ===================================================================================================================================================================================
+
 // @Test '/api/project/remove' route with correct token, project ID and project name;
 describe("Remove Project 1", () => {
   it("Remove Project with correct token, project ID and project name", async (done) => {
-    console.log({TOKEN});
-    console.log({PROJECTID});
-    console.log({PROJECTNAME});
     const res = await request(server)
       .post("/api/project/remove")
       .set("authorization", `${TOKEN}`)
