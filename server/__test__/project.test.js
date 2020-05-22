@@ -36,13 +36,13 @@ describe("Post Create New Project 1", () => {
   });
 });
 
-// @Test '/api/event/create' route with longest name;
+// @Test '/api/event/create' route without Token;
 describe("Post Create New Project 2", () => {
-  it("Create New Event Project with longest name", async (done) => {
+  it("Create New Event Project without Token", async (done) => {
     const res = await request(server)
       .post("/api/event/create")
       .send({
-        project: `${TOKEN}`,
+        project: PROJECTNAME,
       });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
@@ -174,7 +174,7 @@ describe("API Get Participants 3", () => {
   });
 });
 
-// @Test '/api/totalUserAccess' route with with project ID and user token;
+// @Test '/api/totalUserAccess' route with invaild project ID and user token;
 describe("API Get Participants 4", () => {
   it("Request Total Num of Participants", async (done) => {
     const res = await request(server)
@@ -361,7 +361,7 @@ describe("Update Basic Event Info 7", () => {
 });
 
 // @Test '/api/updateEventInfo' route with Invaild Token;
-describe("Update Basic Event Info 1", () => {
+describe("Update Basic Event Info 8", () => {
   it("Update Basic Event Information with Invaild Token", async (done) => {
     const res = await request(server)
       .post("/api/updateEventInfo")
