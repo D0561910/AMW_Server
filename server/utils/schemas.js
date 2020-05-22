@@ -21,9 +21,9 @@ const schemas = {
     projectid: Joi.string().min(2).max(100).required(),
     startDate: Joi.date().optional().min(`${since}`).required(),
     endDate: Joi.date().optional().min(`${tomorrow}`).required(),
-    eventAuthor: Joi.string().min(2).max(20).required(),
-    eventLocation: Joi.string().min(2).max(200).required(),
-    eventName: Joi.string().min(2).max(100).required(),
+    eventAuthor: Joi.string().max(20).required(),
+    eventLocation: Joi.string().max(200).required(),
+    eventName: Joi.string().max(100).required(),
     event_deatils: Joi.string().max(1000).required(),
   }),
   projectIDOnly: Joi.object().keys({
