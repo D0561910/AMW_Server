@@ -18,7 +18,6 @@ beforeAll(async () => {
     .send({ email: "test2@gmail.com", password: "123456" });
   TOKEN = loginResult.body.token;
   INVAILDTOKEN = invaildLoginResult.body.token;
-  console.log({ INVAILDTOKEN });
 });
 
 // @Test '/api/event/create' route with parameters;
