@@ -322,6 +322,9 @@ describe("Update Basic Event Info 7", () => {
 // @Test '/api/project/remove' route with correct token, project ID and project name;
 describe("Remove Project 1", () => {
   it("Remove Project with correct token, project ID and project name", async (done) => {
+    console.log({TOKEN});
+    console.log({PROJECTID});
+    console.log({PROJECTNAME});
     const res = await request(server)
       .post("/api/project/remove")
       .set("authorization", `${TOKEN}`)
