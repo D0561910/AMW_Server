@@ -33,9 +33,8 @@ Launches the test runner in the interactive watch mode.
 npm run test
 ```
 
-Start up sonarQube Docker image.
-Open http://localhost:9000 to view it in the browser.
-Login username and password by default "admin"
+## Start up sonarQube Docker image.
+### Open http://localhost:9000 to view it in the browser and Login with username and password by default "admin"
 ```
 docker-compose -f docker-compose.sonar.yml up -d
 ```
