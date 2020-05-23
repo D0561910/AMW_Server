@@ -38,11 +38,9 @@ describe("Post Create New Project 1", () => {
 // @Test '/api/event/create' route without Token;
 describe("Post Create New Project 2", () => {
   it("Create New Event Project without Token", async (done) => {
-    const res = await request(server)
-      .post("/api/event/create")
-      .send({
-        project: PROJECTNAME,
-      });
+    const res = await request(server).post("/api/event/create").send({
+      project: PROJECTNAME,
+    });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
     done();
@@ -461,6 +459,19 @@ describe("Remove Project 5", () => {
       });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("errmsg");
+    done();
+  });
+});
+
+// @Test '/api/project/remove' route with correct token only;
+describe("Remove Project 6", () => {
+  it("Remove Project with correct token, project ID and project name", async (done) => {
+    const res = await request(server)
+      .post("/api/project/remove")
+      .set("authorization", `${TOKEN}`)
+      .send();
+    expect(res.statusCode).toEqual(422);
+    expect(res.body).toHaveProperty("typeError");
     done();
   });
 });
