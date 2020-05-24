@@ -6,6 +6,7 @@ import helmet from "helmet";
 import loginRouter from "./routes/loginRouter";
 import signUpRouter from "./routes/signupRouter";
 import projectRouter from "./routes/projectRouter";
+import { limiter, signupLimiter } from "./utils/requestLimit";
 
 var app = express();
 
@@ -22,6 +23,10 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.set('trust proxy', 1);
+
+app.use(limiter);
+app.use("/api/signup", signupLimiter)
 
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
