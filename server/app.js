@@ -23,10 +23,10 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 app.use(limiter);
-app.use("/api/signup", signupLimiter)
+app.use("/api/signup", signupLimiter);
 
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
