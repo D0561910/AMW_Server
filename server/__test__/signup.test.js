@@ -1,14 +1,52 @@
 import request from "supertest";
 import "regenerator-runtime/runtime";
 import server from "../app";
+import admin from "../config/firebase.config";
 
 const TEST_EMAIL = "Ronald@gmail.com";
 const TEST_PASSWORD = "123456aaccd";
 const TEST_USERNAME = "Donald Duch";
 
+beforeAll(() => {
+  admin
+    .database()
+    .ref("users/")
+    .once("value")
+    .then(async (snap) => {
+      let child = snap.val();
+      for (let item in child) {
+        if (
+          child[item].email === TEST_EMAIL &&
+          child[item].name === TEST_USERNAME
+        ) {
+          await admin.database().ref(`/users/${item}`).remove();
+          console.log({ item });
+        }
+      }
+    });
+});
+
 // @Test '/signup' route with true type email, username and password;
 describe("Sign Up test 1", () => {
   it("Sign Up API with new email, username and password", async (done) => {
+    let key = await admin
+      .database()
+      .ref("users/")
+      .once("value")
+      .then(async (snap) => {
+        let child = snap.val();
+        for (let item in child) {
+          if (
+            child[item].email === TEST_EMAIL &&
+            child[item].name === TEST_USERNAME
+          ) {
+            console.log({ item });
+            return item;
+          }
+        }
+      });
+    admin.database().ref(`/users/${key}`).remove();
+    jest.setTimeout(10000);
     const res = await request(server).post("/api/signup").send({
       email: TEST_EMAIL,
       password: TEST_PASSWORD,
