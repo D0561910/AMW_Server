@@ -20,7 +20,6 @@ beforeAll(() => {
           child[item].name === TEST_USERNAME
         ) {
           await admin.database().ref(`/users/${item}`).remove();
-          console.log({ item });
         }
       }
     });
