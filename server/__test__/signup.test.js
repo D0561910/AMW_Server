@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime";
 import server from "../app";
 import admin from "../config/firebase.config";
 
+// Initail test parameter.
 const TEST_EMAIL = "Ronald@gmail.com";
 const TEST_PASSWORD = "123456aaccd";
 const TEST_USERNAME = "Donald Duch";
@@ -24,8 +25,11 @@ describe("Sign Up test 1", () => {
             return item;
           }
         }
+        return "";
       });
-    admin.database().ref(`/users/${key}`).remove();
+    if (key !== "") {
+      admin.database().ref(`/users/${key}`).remove();
+    }
     jest.setTimeout(10000);
     const res = await request(server).post("/api/signup").send({
       email: TEST_EMAIL,
