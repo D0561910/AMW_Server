@@ -9,6 +9,7 @@ describe("login test 1", () => {
       .post("/api/login")
       .send({ email: "test@gmail.com", password: "123456" });
     expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("msg");
     expect(res.body).toHaveProperty("token");
     done();
   });
@@ -21,7 +22,7 @@ describe("login test 2", () => {
       .post("/api/login")
       .send({ email: "tester@gmail.com", password: "6543211" });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -33,7 +34,7 @@ describe("login test 3", () => {
       .post("/api/login")
       .send({ email: "test@gmail.com", password: "123456aaccd" });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -58,10 +59,4 @@ describe("login test 5", () => {
     expect(res.body).toHaveProperty("typeError");
     done();
   });
-});
-
-afterAll(async (done) => {
-  // close server conection
-  // server.close();
-  done();
 });

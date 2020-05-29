@@ -30,7 +30,9 @@ describe("Post Create New Project 1", () => {
         project: PROJECTNAME,
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("msg");
+    expect(res.body).toEqual({
+      msg: "Event Created",
+    });
     done();
   });
 });
@@ -42,7 +44,7 @@ describe("Post Create New Project 2", () => {
       project: PROJECTNAME,
     });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -110,7 +112,9 @@ describe("Get Dashboard Data 2", () => {
         projectid: PROJECTID,
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errmsg");
+    expect(res.body).toEqual({
+      errmsg: "User ID not match",
+    });
     done();
   });
 });
@@ -122,7 +126,7 @@ describe("Get Dashboard Data 3", () => {
       projectid: PROJECTID,
     });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -151,7 +155,7 @@ describe("API Get Participants 2", () => {
       projectid: PROJECTID,
     });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -166,7 +170,10 @@ describe("API Get Participants 3", () => {
         projectid: PROJECTID,
       });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({
+      error: "Forbidden",
+      msg: "projectid and user id not match",
+    });
     done();
   });
 });
@@ -181,7 +188,10 @@ describe("API Get Participants 4", () => {
         projectid: "PROJECTID",
       });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({
+      error: "Forbidden",
+      msg: "projectid and user id not match",
+    });
     done();
   });
 });
@@ -204,7 +214,9 @@ describe("Create Basic Event Info", () => {
         startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("msg");
+    expect(res.body).toEqual({
+      msg: "Update Basic Information and Event Date Successfully",
+    });
     done();
   });
 });
@@ -225,7 +237,9 @@ describe("Update Basic Event Info 1", () => {
         startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(202);
-    expect(res.body).toHaveProperty("msg");
+    expect(res.body).toEqual({
+      msg: "Update Basic Information Successfully",
+    });
     done();
   });
 });
@@ -246,7 +260,9 @@ describe("Update Basic Event Info 2", () => {
         startDate: `2020-06-20`,
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errmsg");
+    expect(res.body).toEqual({
+      errmsg: "Bad request The activity must be within 7 days",
+    });
     done();
   });
 });
@@ -306,7 +322,7 @@ describe("Update Basic Event Info 5", () => {
       startDate: `2020-07-18`,
     });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -373,7 +389,10 @@ describe("Update Basic Event Info 8", () => {
         startDate: `2020-07-30`,
       });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({
+      error: "Forbidden",
+      msg: "projectid and user id not match",
+    });
     done();
   });
 });
@@ -391,7 +410,9 @@ describe("Remove Project 1", () => {
         projectname: PROJECTNAME,
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("msg");
+    expect(res.body).toEqual({
+      msg: "Remove Successfully",
+    });
     done();
   });
 });
@@ -404,7 +425,7 @@ describe("Remove Project 2", () => {
       projectname: PROJECTNAME,
     });
     expect(res.statusCode).toEqual(403);
-    expect(res.body).toHaveProperty("error");
+    expect(res.body).toEqual({ error: "Forbidden" });
     done();
   });
 });
@@ -412,18 +433,17 @@ describe("Remove Project 2", () => {
 // @Test '/api/project/remove' route with correct project ID and project name but invaild token;
 describe("Remove Project 3", () => {
   it("Remove Project with correct project ID and project name but invaild token", async (done) => {
-    const loginResult = await request(server)
-      .post("/api/login")
-      .send({ email: "test2@gmail.com", password: "123456" });
     const res = await request(server)
       .post("/api/project/remove")
-      .set("authorization", `${loginResult.body.token}`)
+      .set("authorization", `${INVAILDTOKEN}`)
       .send({
         projectid: PROJECTID,
         projectname: PROJECTNAME,
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errmsg");
+    expect(res.body).toEqual({
+      errmsg: "Parameters Error",
+    });
     done();
   });
 });
@@ -431,9 +451,6 @@ describe("Remove Project 3", () => {
 // @Test '/api/project/remove' route with correct token and project name only;
 describe("Remove Project 4", () => {
   it("Remove Project with correct token and project name", async (done) => {
-    const loginResult = await request(server)
-      .post("/api/login")
-      .send({ email: "test2@gmail.com", password: "123456" });
     const res = await request(server)
       .post("/api/project/remove")
       .set("authorization", `${TOKEN}`)
@@ -442,7 +459,9 @@ describe("Remove Project 4", () => {
         projectname: PROJECTNAME,
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errmsg");
+    expect(res.body).toEqual({
+      errmsg: "Parameters Error",
+    });
     done();
   });
 });
@@ -458,7 +477,9 @@ describe("Remove Project 5", () => {
         projectname: "REMOVE",
       });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errmsg");
+    expect(res.body).toEqual({
+      errmsg: "Parameters Error",
+    });
     done();
   });
 });
@@ -477,7 +498,7 @@ describe("Remove Project 6", () => {
 });
 
 afterAll(async (done) => {
-  // close server conection
-  // server.close();
+  TOKEN = "";
+  INVAILDTOKEN = "";
   done();
 });

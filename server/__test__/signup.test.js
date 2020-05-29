@@ -37,7 +37,9 @@ describe("Sign Up test 1", () => {
       name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("msg");
+    expect(res.body).toEqual({
+      msg: "Register Successfully",
+    });
     done();
   });
 });
@@ -51,7 +53,9 @@ describe("Sign Up test 2", () => {
       name: TEST_USERNAME,
     });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("errormsg");
+    expect(res.body).toEqual({
+      errormsg: "E-mail Already Register try another e-mail",
+    });
     done();
   });
 });
@@ -85,10 +89,4 @@ describe("Get Unknow Route", () => {
     expect(res.statusCode).toEqual(404);
     done();
   });
-});
-
-afterAll(async (done) => {
-  // close server conection
-  // server.close();
-  done();
 });
