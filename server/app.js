@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import helmet from "helmet";
+import httpStatus from "http-status";
+import dotenv from 'dotenv'
 
 import loginRouter from "./routes/loginRouter";
 import signUpRouter from "./routes/signupRouter";
@@ -18,6 +20,8 @@ app.use(
     },
   })
 );
+
+dotenv.config();
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -37,7 +41,7 @@ app.use((err, req, res, next) => {
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
     code: err.code ? err.code : httpStatus[err.status],
-    stack: config.env === "development" ? err.stack : {},
+    stack: process.env.NODE_ENV === "development" ? err.stack : {},
   });
   next();
 });
