@@ -11,7 +11,8 @@
     "watch:dev": "nodemon",
     "sonar": "node sonar-project.js",
     "test": "jest --coverage --forceExit --detectOpenHandles --verbose",
-    "up": "npm-run-all build server"
+    "up": "npm-run-all build server",
+    "test:dev": "npm-run-all test sonar"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
