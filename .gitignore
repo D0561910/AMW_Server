@@ -6,3 +6,4 @@ dist-server
 coverage
 .scannerwork
 .env
+jmeter.log
