@@ -2,12 +2,15 @@ import request from "supertest";
 import "regenerator-runtime/runtime";
 import server from "../app";
 
+const truePass = "123456";
+const falsePass = "6543211"
+
 // @Test '/login' route with true email and password;
 describe("login test 1", () => {
   it("Login API with true email and password", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ email: "test@gmail.com", password: "123456" });
+      .send({ email: "test@gmail.com", password: truePass });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("msg");
     expect(res.body).toHaveProperty("token");
@@ -20,7 +23,7 @@ describe("login test 2", () => {
   it("Login API with wrong email and password", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ email: "tester@gmail.com", password: "6543211" });
+      .send({ email: "tester@gmail.com", password: falsePass });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toEqual({ error: "Forbidden" });
     done();
@@ -32,7 +35,7 @@ describe("login test 3", () => {
   it("Login API with true email, but wrong password", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ email: "test@gmail.com", password: "123456aaccd" });
+      .send({ email: "test@gmail.com", password: falsePass });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toEqual({ error: "Forbidden" });
     done();
@@ -54,7 +57,7 @@ describe("login test 5", () => {
   it("Login API with error email", async (done) => {
     const res = await request(server)
       .post("/api/login")
-      .send({ email: "abc", password: "1234567" });
+      .send({ email: "abc", password: falsePass });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("typeError");
     done();
