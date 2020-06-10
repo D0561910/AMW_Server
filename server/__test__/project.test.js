@@ -8,14 +8,15 @@ var PROJECTID = "";
 const PROJECTNAME = "Unit-Testing";
 const EMAIL = "test@gmail.com";
 var INVAILDTOKEN = "";
+const pass = "123456"
 
 beforeAll(async () => {
   const loginResult = await request(server)
     .post("/api/login")
-    .send({ email: "test@gmail.com", password: "123456" });
+    .send({ email: "test@gmail.com", password: pass });
   const invaildLoginResult = await request(server)
     .post("/api/login")
-    .send({ email: "test2@gmail.com", password: "123456" });
+    .send({ email: "test2@gmail.com", password: pass });
   TOKEN = loginResult.body.token;
   INVAILDTOKEN = invaildLoginResult.body.token;
 });
