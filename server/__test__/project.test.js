@@ -13,10 +13,10 @@ const PASS = "123456"
 beforeAll(async () => {
   const loginResult = await request(server)
     .post("/api/login")
-    .send({ email: "test@gmail.com", password: pass });
+    .send({ email: "test@gmail.com", password: PASS });
   const invaildLoginResult = await request(server)
     .post("/api/login")
-    .send({ email: "test2@gmail.com", password: pass });
+    .send({ email: "test2@gmail.com", password: PASS });
   TOKEN = loginResult.body.token;
   INVAILDTOKEN = invaildLoginResult.body.token;
 });
