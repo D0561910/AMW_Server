@@ -8,7 +8,7 @@ var PROJECTID = "";
 const PROJECTNAME = "Unit-Testing";
 const EMAIL = "test@gmail.com";
 var INVAILDTOKEN = "";
-const pass = "123456"
+const PASS = "123456"
 
 beforeAll(async () => {
   const loginResult = await request(server)
@@ -105,7 +105,7 @@ describe("Get Dashboard Data 2", () => {
   it("Request Basic Event Infomation with project ID and error user token", async (done) => {
     const loginResult = await request(server)
       .post("/api/login")
-      .send({ email: "test2@gmail.com", password: "123456" });
+      .send({ email: "test2@gmail.com", password: PASS });
     const res = await request(server)
       .post("/api/project/overview")
       .set("authorization", `${loginResult.body.token}`)

@@ -7,6 +7,7 @@ import admin from "../config/firebase.config";
 const TEST_EMAIL = "Ronald@gmail.com";
 const TEST_PASSWORD = "123456aaccd";
 const TEST_USERNAME = "Donald Duch";
+const PASS = "12345";
 
 // @Test '/signup' route with true type email, username and password;
 describe("Sign Up test 1", () => {
@@ -65,7 +66,7 @@ describe("Sign Up test 3", () => {
   it("Sign Up API with error type", async (done) => {
     const res = await request(server)
       .post("/api/signup")
-      .send({ email: "tester@", password: "12345", names: "Test" });
+      .send({ email: "tester@", password: PASS, names: "Test" });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("typeError");
     done();
