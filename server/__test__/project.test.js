@@ -253,12 +253,12 @@ describe("Update Basic Event Info 2", () => {
       .set("authorization", `${TOKEN}`)
       .send({
         projectid: PROJECTID,
-        endDate: `2020-06-30`,
+        endDate: `2020-07-30`,
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy two Free one`,
-        startDate: `2020-06-20`,
+        startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toEqual({
@@ -276,12 +276,12 @@ describe("Update Basic Event Info 3", () => {
       .set("authorization", `${TOKEN}`)
       .send({
         projectid: PROJECTID,
-        endDate: `2020-06-32`,
+        endDate: `2020-07-32`,
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy two Free one`,
-        startDate: `2020-06-20`,
+        startDate: `2020-07-20`,
       });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("typeError");
@@ -297,12 +297,12 @@ describe("Update Basic Event Info 4", () => {
       .set("authorization", `${TOKEN}`)
       .send({
         projectid: PROJECTID,
-        endDate: `2020-06-02`,
+        endDate: `2020-07-02`,
         eventAuthor: `David Tsai`,
         eventLocation: `Carrefoure`,
         eventName: `StarBucks Coffee`,
         event_deatils: `Enjoy buy two Free one`,
-        startDate: `2020-06-00`,
+        startDate: `2020-07-00`,
       });
     expect(res.statusCode).toEqual(422);
     expect(res.body).toHaveProperty("typeError");
