@@ -27,3 +27,23 @@ describe("betweenTwoDays function test Case", () => {
     done();
   });
 });
+
+// @Test betweenTwoDays function
+describe("betweenTwoDays function test Case", () => {
+  it("test case with empty start date", (done) => {
+    const ANSWER = [];
+    const res = betweenTwoDays("", "07-15-2020");
+    expect(res).toEqual(ANSWER);
+    done();
+  });
+});
+
+// @Test betweenTwoDays function
+describe("betweenTwoDays function test Case", () => {
+  it("test case with empty end date", (done) => {
+    const ANSWER = [];
+    const res = betweenTwoDays("07-15-2020", "");
+    expect(res).toEqual(ANSWER);
+    done();
+  });
+});
