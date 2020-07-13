@@ -3,13 +3,14 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import helmet from "helmet";
 import httpStatus from "http-status";
-import dotenv from 'dotenv';
-import cors from 'cors';
+import dotenv from "dotenv";
+import cors from "cors";
 
 import loginRouter from "./routes/loginRouter";
 import signUpRouter from "./routes/signupRouter";
 import projectRouter from "./routes/projectRouter";
 import { limiter, signupLimiter } from "./utils/requestLimit";
+import checkEmailValidation from "./utils/checkEmailValidation";
 
 var app = express();
 
@@ -33,6 +34,13 @@ app.set("trust proxy", 1);
 
 app.use(limiter);
 app.use("/api/signup", signupLimiter);
+
+const test = async () => {
+  const test = await checkEmailValidation("Helloworld@gmail.com");
+  console.log(test);
+};
+
+test();
 
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
