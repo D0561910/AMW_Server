@@ -35,13 +35,6 @@ app.set("trust proxy", 1);
 app.use(limiter);
 app.use("/api/signup", signupLimiter);
 
-const test = async () => {
-  const test = await checkEmailValidation("Helloworld@gmail.com");
-  console.log(test);
-};
-
-test();
-
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
 app.use("/api", projectRouter);
