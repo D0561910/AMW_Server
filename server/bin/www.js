@@ -7,7 +7,10 @@
 import app from "../app";
 import debugLib from "debug";
 import http from "http";
+import dotenv from "dotenv";
 import config from "../config/config";
+
+dotenv.config();
 
 var debug = debugLib("myapp:server");
 

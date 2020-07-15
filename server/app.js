@@ -41,7 +41,6 @@ app.use("/api", projectRouter);
 
 app.get("/", function (req, res) {
   res.send("Hello");
-  console.log(process.env.PORT);
 });
 
 // error handler, send stacktrace only during development 錯誤後最後才跑這邊
