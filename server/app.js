@@ -10,7 +10,7 @@ import loginRouter from "./routes/loginRouter";
 import signUpRouter from "./routes/signupRouter";
 import projectRouter from "./routes/projectRouter";
 import { limiter, signupLimiter } from "./utils/requestLimit";
-import findUser from "./utils/findUser";
+import admin from "./config/firebase.config";
 
 var app = express();
 
@@ -34,13 +34,6 @@ app.set("trust proxy", 1);
 
 app.use(limiter);
 app.use("/api/signup", signupLimiter);
-
-// const test = async () => {
-//   const test = await findUser("Helloworld@gmail.com", "123456");
-//   console.log(test);
-// };
-
-// test();
 
 app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
