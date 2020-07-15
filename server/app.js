@@ -10,7 +10,7 @@ import loginRouter from "./routes/loginRouter";
 import signUpRouter from "./routes/signupRouter";
 import projectRouter from "./routes/projectRouter";
 import { limiter, signupLimiter } from "./utils/requestLimit";
-import admin from "./config/firebase.config";
+import config from "./config/config";
 
 var app = express();
 
@@ -39,13 +39,17 @@ app.use("/api", loginRouter);
 app.use("/api", signUpRouter);
 app.use("/api", projectRouter);
 
-// test
+app.get("/", function (req, res) {
+  res.send("Hello");
+  console.log(process.env.PORT);
+});
+
 // error handler, send stacktrace only during development 錯誤後最後才跑這邊
 app.use((err, req, res, next) => {
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
     code: err.code ? err.code : httpStatus[err.status],
-    stack: process.env.NODE_ENV === "development" ? err.stack : {},
+    stack: config.NODE_ENV === "development" ? err.stack : {},
   });
   next();
 });
