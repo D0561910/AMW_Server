@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 
-function checkEmailValidation(email) {
+function checkEmailReply(email) {
   return new Promise((resolve) => {
     admin
       .database()
@@ -18,4 +18,4 @@ function checkEmailValidation(email) {
   });
 }
 
-export default checkEmailValidation;
+export default checkEmailReply;

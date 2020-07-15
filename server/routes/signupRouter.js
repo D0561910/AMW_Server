@@ -3,16 +3,16 @@ import bcrypt from "bcrypt";
 import admin from "firebase-admin";
 import validation from "../utils/validation";
 import schemas from "../utils/schemas";
-import checkEmailValidation from "../utils/checkEmailValidation";
+import checkEmailReply from "../utils/checkEmailReply";
 
 const signupRouter = express.Router();
 
 signupRouter.post("/signup", validation(schemas.signUpSchema), async (req, res) => {
-  const reply = await checkEmailValidation(req.body.email);
+  const reply = await checkEmailReply(req.body.email);
 
   const saltRounds = 10;
   // for register new account
-  if (reply == "false") {
+  if (reply === "false") {
     bcrypt.hash(req.body.password, saltRounds).then(function (hash) {
       // Store hash in your password DB.
       admin.database().ref("users/").push({

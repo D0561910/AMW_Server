@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import checkEmailValidation from "../../utils/checkEmailValidation";
+import checkEmailReply from "../../utils/checkEmailReply";
 import admin from "../../config/firebase.config";
 
 admin;
@@ -8,7 +8,7 @@ admin;
 describe("checkEmailValidation function test Case", () => {
   it("test case with new email", async (done) => {
     const ANSWER = "false";
-    const res = await checkEmailValidation("Hello@gmail.com");
+    const res = await checkEmailReply("Hello@gmail.com");
     expect(res).toEqual(ANSWER);
     done();
   });
@@ -18,7 +18,7 @@ describe("checkEmailValidation function test Case", () => {
 describe("checkEmailValidation function test Case", () => {
   it("test case with reply email", async (done) => {
     const ANSWER = "true";
-    const res = await checkEmailValidation("test@gmail.com");
+    const res = await checkEmailReply("test@gmail.com");
     expect(res).toEqual(ANSWER);
     done();
   });
