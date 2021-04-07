@@ -1,6 +1,7 @@
 import admin from "../config/firebase.config";
+
 const vaildRequest = async (email, projectid) => {
-  return await admin
+  const result = await admin
     .database()
     .ref("/projects")
     .once("value")
@@ -13,6 +14,7 @@ const vaildRequest = async (email, projectid) => {
       }
       return false;
     });
+  return result;
 };
 
 export default vaildRequest;
