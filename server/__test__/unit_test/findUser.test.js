@@ -2,7 +2,7 @@ import "regenerator-runtime/runtime";
 import findUser from "../../utils/findUser";
 import admin from "../../config/firebase.config";
 
-admin;
+// admin;
 
 // @Test findUser function
 describe("findUser function test Case", () => {

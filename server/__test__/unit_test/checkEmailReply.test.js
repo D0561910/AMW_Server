@@ -2,7 +2,7 @@ import "regenerator-runtime/runtime";
 import checkEmailReply from "../../utils/checkEmailReply";
 import admin from "../../config/firebase.config";
 
-admin;
+// admin;
 
 // @Test checkEmailValidation function
 describe("checkEmailValidation function test Case", () => {
