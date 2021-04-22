@@ -1,0 +1,11 @@
+---
+application:
+  name: "amw-server"
+  project: "backend-server-for-rn"
+  organization: "QoveryCommunity"
+routers:
+- name: "main-amw-server"
+  routes:
+  - application_name: "amw-server"
+    paths:
+    - "/*"
